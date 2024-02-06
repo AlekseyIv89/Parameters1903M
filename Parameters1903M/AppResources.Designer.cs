@@ -19,7 +19,7 @@ namespace Parameters1903M {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class AppResources {
@@ -96,16 +96,6 @@ namespace Parameters1903M {
         internal static byte[] OxyPlot {
             get {
                 object obj = ResourceManager.GetObject("OxyPlot", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Byte[].
-        /// </summary>
-        internal static byte[] OxyPlot_Wpf {
-            get {
-                object obj = ResourceManager.GetObject("OxyPlot_Wpf", resourceCulture);
                 return ((byte[])(obj));
             }
         }

@@ -30,10 +30,6 @@ namespace Parameters1903M
             {
                 return Assembly.Load(AppResources.Newtonsoft_Json);
             }
-            else if (args.Name.Contains("OxyPlot.Wpf"))
-            {
-                return Assembly.Load(AppResources.OxyPlot_Wpf);
-            }
             else if (args.Name.Contains("OxyPlot"))
             {
                 return Assembly.Load(AppResources.OxyPlot);

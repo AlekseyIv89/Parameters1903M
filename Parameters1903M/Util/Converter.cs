@@ -22,7 +22,7 @@ namespace Parameters1903M.Util
         public static double ConvertVoltToMilliAmpere(double valueInVolt)
         {
             double valueResult = valueInVolt / GlobalVars.Rizm * 1_000.0;
-            log.Debug($"КОНВЕРТЕР: {valueInVolt:F7} [В] -> {valueResult:F7} [мА]");
+            log.Debug($"КОНВЕРТЕР: {valueInVolt:F7} [В] -> {valueResult:F7} [мА] (R = {GlobalVars.Rizm:F5} Ом)");
 
             return valueResult;
         }
@@ -30,7 +30,7 @@ namespace Parameters1903M.Util
         public static double ConvertVoltToMicroAmpere(double valueInVolt)
         {
             double valueResult = valueInVolt / GlobalVars.Rizm * 1_000_000.0;
-            log.Debug($"КОНВЕРТЕР: {valueInVolt:F7} [В] -> {valueResult:F7} [мкА]");
+            log.Debug($"КОНВЕРТЕР: {valueInVolt:F7} [В] -> {valueResult:F7} [мкА] (R = {GlobalVars.Rizm:F5} Ом)");
 
             return valueResult;
         }
