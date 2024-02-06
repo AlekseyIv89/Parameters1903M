@@ -1,0 +1,33 @@
+﻿<Window x:Class="Parameters1903M.View.TimerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Parameters1903M.View"
+        xmlns:vm="clr-namespace:Parameters1903M.ViewModel"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:TimerViewModel}"
+        Title="{Binding Title}"
+        FontSize="72"
+        ResizeMode="NoResize" 
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        FontWeight="SemiBold" 
+        FontStretch="SemiExpanded">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Closing">
+            <b:InvokeCommandAction Command="{Binding TimerWindowCloseCommand}"
+                                   PassEventArgsToCommand="True"/>
+        </b:EventTrigger>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding TimerWindowLoadedCommand}"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+    <Grid>
+        <Label Content="{Binding TimerModel.Time}"
+               Width="320"
+               Margin="10"
+               HorizontalContentAlignment="Center"/>
+    </Grid>
+</Window>

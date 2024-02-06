@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DD0452F9-B25B-43BF-9666-B85318A20666}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Parameters1903M</RootNamespace>
+    <AssemblyName>Parameters1903M</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Parameters1903M.App</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EasyEncryption, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyEncryption.1.0.2\lib\EasyEncryption.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OxyPlot, Version=2.1.2.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.2.1.2\lib\net45\OxyPlot.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=2.1.2.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.2.1.2\lib\net45\OxyPlot.Wpf.dll</HintPath>
+      <Private>True</Private>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf.Shared, Version=2.1.2.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.Shared.2.1.2\lib\net45\OxyPlot.Wpf.Shared.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PdfSharp-WPF, Version=1.32.2608.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PdfSharp.Xps.1.0.0\lib\PdfSharp-WPF.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PdfSharp.Xps, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PdfSharp.Xps.1.0.0\lib\PdfSharp.Xps.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ReachFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Printing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Model\BaseModel.cs" />
+    <Compile Include="Model\DeviceData.cs" />
+    <Compile Include="Model\DeviceType.cs" />
+    <Compile Include="Model\ProverkaType.cs" />
+    <Compile Include="Model\ReportData.cs" />
+    <Compile Include="Model\TableDeviceData.cs" />
+    <Compile Include="Model\TimerModel.cs" />
+    <Compile Include="Model\TSE1903M\InputDialogModel.cs" />
+    <Compile Include="Model\TSE1903M\IProvData.cs" />
+    <Compile Include="Model\TSE1903M\IProvModel.cs" />
+    <Compile Include="Model\TSE1903M\Prov10_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov13_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov14_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov15_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov16_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov17_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov18_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov1_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov2_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov3_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov5_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov8_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov9_Model.cs" />
+    <Compile Include="Model\VersionInfo.cs" />
+    <Compile Include="Service\AboutWindowService.cs" />
+    <Compile Include="Service\Command\BaseCommand.cs" />
+    <Compile Include="Service\Command\RelayCommand.cs" />
+    <Compile Include="Service\DeviceDataInputWindowService.cs" />
+    <Compile Include="Service\IStartStopMeasure.cs" />
+    <Compile Include="Service\IWindowService.cs" />
+    <Compile Include="Service\MainWindowService.cs" />
+    <Compile Include="Service\ProgramSettingsWindowService.cs" />
+    <Compile Include="Service\ReportPrintSettingsWindowService.cs" />
+    <Compile Include="Service\ReportWindowService.cs" />
+    <Compile Include="Service\StartWindowService.cs" />
+    <Compile Include="Service\IWindowClosingService.cs" />
+    <Compile Include="Service\TimerWindowService.cs" />
+    <Compile Include="Service\TSE1903M\InputDialogWindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov0_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov10_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov13_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov14_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov15_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov16_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov17_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov18_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov1_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov2_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov3_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov5_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov8_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov9_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\ProvMeasureWindowService.cs" />
+    <Compile Include="Service\WhatsNewWindowService.cs" />
+    <Compile Include="Util\Converter.cs" />
+    <Compile Include="Util\Data\Data.cs" />
+    <Compile Include="Util\EnumInfo.cs" />
+    <Compile Include="Util\Exceptions\ProvCancelledByUserException.cs" />
+    <Compile Include="Util\GlobalVars.cs" />
+    <Compile Include="Util\Multimeter\CommunicationInterface.cs" />
+    <Compile Include="Util\Multimeter\IMeasure.cs" />
+    <Compile Include="Util\Multimeter\MeasureResult.cs" />
+    <Compile Include="Util\Multimeter\Simulator.cs" />
+    <Compile Include="Util\Multimeter\V2_43.cs" />
+    <Compile Include="Util\Multimeter\V7_84.cs" />
+    <Compile Include="ViewModel\AboutViewModel.cs" />
+    <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\DeviceDataInputViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ProgramSettingsViewModel.cs" />
+    <Compile Include="ViewModel\ReportPrintSettingsViewModel.cs" />
+    <Compile Include="ViewModel\ReportViewModel.cs" />
+    <Compile Include="ViewModel\StartViewModel.cs" />
+    <Compile Include="ViewModel\TimerViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\InputDialogViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov0_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov10_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov13_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov14_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov15_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov16_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov17_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov18_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov1_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov2_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov3_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov5_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov8_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov9_ViewModel.cs" />
+    <Compile Include="ViewModel\ValidationRules\DeviceNumValidationRule.cs" />
+    <Compile Include="ViewModel\WhatsNewViewModel.cs" />
+    <Compile Include="View\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DeviceDataInputWindow.xaml.cs">
+      <DependentUpon>DeviceDataInputWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ProgramSettingsWindow.xaml.cs">
+      <DependentUpon>ProgramSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReportPrintSettingsWindow.xaml.cs">
+      <DependentUpon>ReportPrintSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReportWindow.xaml.cs">
+      <DependentUpon>ReportWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StartWindow.xaml.cs">
+      <DependentUpon>StartWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TimerWindow.xaml.cs">
+      <DependentUpon>TimerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\InputDialogWindow.xaml.cs">
+      <DependentUpon>InputDialogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov0_Window.xaml.cs">
+      <DependentUpon>Prov0_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov10_Window.xaml.cs">
+      <DependentUpon>Prov10_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov13_Window.xaml.cs">
+      <DependentUpon>Prov13_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov14_Window.xaml.cs">
+      <DependentUpon>Prov14_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov15_Window.xaml.cs">
+      <DependentUpon>Prov15_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov16_Window.xaml.cs">
+      <DependentUpon>Prov16_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov17_Window.xaml.cs">
+      <DependentUpon>Prov17_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov18_Window.xaml.cs">
+      <DependentUpon>Prov18_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov1_Window.xaml.cs">
+      <DependentUpon>Prov1_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov2_Window.xaml.cs">
+      <DependentUpon>Prov2_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov3_Window.xaml.cs">
+      <DependentUpon>Prov3_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov5_Window.xaml.cs">
+      <DependentUpon>Prov5_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov8_Window.xaml.cs">
+      <DependentUpon>Prov8_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov9_Window.xaml.cs">
+      <DependentUpon>Prov9_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WhatsNewWindow.xaml.cs">
+      <DependentUpon>WhatsNewWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DeviceDataInputWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\Parameter.cs" />
+    <Compile Include="AppResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AppResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Util\EncryptionDecryption.cs" />
+    <Compile Include="Util\ProgramInfo.cs" />
+    <Compile Include="View\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="View\ProgramSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReportPrintSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StartWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TimerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\InputDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov0_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov10_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov13_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov14_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov15_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov16_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov17_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov18_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov1_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov2_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov3_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov5_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov8_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov9_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WhatsNewWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Libs\EasyEncryption.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Libs\Microsoft.Xaml.Behaviors.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Libs\Newtonsoft.Json.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Libs\OxyPlot.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Libs\OxyPlot.Wpf.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Libs\PdfSharp-WPF.dll" />
+    <Content Include="Libs\PdfSharp.Xps.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

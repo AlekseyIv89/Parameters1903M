@@ -1,0 +1,169 @@
+﻿<Window x:Class="Parameters1903M.View.ReportPrintSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Parameters1903M.ViewModel"
+        d:DataContext="{d:DesignInstance Type=vm:ReportPrintSettingsViewModel}"
+        mc:Ignorable="d"
+        Title="{Binding Title}" 
+        SizeToContent="WidthAndHeight"
+        FontSize="16"
+        FontFamily="Times New Roman"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="1" 
+                       Text="Документ"/>
+            <TextBox Grid.Column="2"
+                     Margin="5,0"
+                     Width="200"
+                     Text="{Binding Document, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}"/>
+
+            <TextBlock Grid.Column="4" 
+                       Text="Графа таблицы"/>
+            <TextBox Grid.Column="5"
+                     Width="120"
+                     Margin="5,0"
+                     Text="{Binding GrafaTable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1"
+                    Padding="10,1"
+                    Margin="0,5,10,0"
+                    Content="Только измеренные"
+                    Command="{Binding MeasuredParametersShowCommand}">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="3"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+
+            <Button Grid.Column="2"
+                    Padding="10,1"
+                    Margin="0,5,5,0"
+                    Content="Все"
+                    Command="{Binding AllParametersShowCommand}">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="3"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+
+        <ListView Grid.Row="2"
+                  Margin="5"
+                  Foreground="Black"
+                  ItemsSource="{Binding PrintParameters, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}">
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn Header="№"
+                                    Width="30"
+                                    DisplayMemberBinding="{Binding Num}"/>
+                    <GridViewColumn Header="Название параметра"
+                                    Width="336"
+                                    DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Значение"
+                                    Width="85"
+                                    DisplayMemberBinding="{Binding StrValue}"/>
+                    <GridViewColumn Header="Ед. изм."
+                                    Width="70"
+                                    DisplayMemberBinding="{Binding Unit}"/>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="&#x274c;"
+                                        Background="White"
+                                        Foreground="Red"
+                                        Command="{Binding }"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="Подписи"
+                      Margin="5,0,0,10">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Content="Регулировщик"
+                              IsChecked="{Binding IsSignAdjustor}"
+                              IsEnabled="False"
+                              Margin="5,1" 
+                              VerticalContentAlignment="Center"/>
+                    <CheckBox Content="ОТК"
+                              Margin="5,1" 
+                              VerticalContentAlignment="Center"
+                              IsChecked="{Binding IsSignOTK, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}"/>
+                    <CheckBox Content="ВП МО"
+                              Margin="5,1" 
+                              VerticalContentAlignment="Center"
+                              IsChecked="{Binding IsSignVPMO, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}"/>
+                </StackPanel>
+            </GroupBox>
+
+            <Button Grid.Column="2"
+                    Height="22"
+                    Padding="10,1"
+                    Margin="0,0,10,10"
+                    VerticalAlignment="Bottom"
+                    Content="Печать"
+                    Command="{Binding BtnPrintReportCommand}">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="3"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Grid.Column="3"
+                    Height="22"
+                    Padding="10,1"
+                    Margin="0,0,5,10"
+                    VerticalAlignment="Bottom"
+                    Content="Предпросмотр"
+                    Command="{Binding BtnPreviewReportCommand}">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="3"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+
+    </Grid>
+</Window>

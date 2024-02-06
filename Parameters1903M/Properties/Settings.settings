@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Parameters1903M.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Rizm" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">10.0001</Value>
+    </Setting>
+    <Setting Name="AdjusterSecondName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ComPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM1</Value>
+    </Setting>
+    <Setting Name="StartSavePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\</Value>
+    </Setting>
+    <Setting Name="VoltmeterType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">V7_84</Value>
+    </Setting>
+    <Setting Name="DeviceNumRegex" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">^\d{8}[Нн]?$</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

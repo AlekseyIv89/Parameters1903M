@@ -1,0 +1,131 @@
+﻿<Window x:Class="Parameters1903M.View.TSE1903M.Prov1_Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Parameters1903M.View.TSE1903M"
+        xmlns:vm="clr-namespace:Parameters1903M.ViewModel.TSE1903M"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        d:DataContext="{d:DesignInstance Type=vm:Prov1_ViewModel}"
+        mc:Ignorable="d"
+        Title="{Binding Title}"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        FontSize="14" 
+        FontFamily="Times New Roman"
+        WindowStartupLocation="CenterOwner">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Closing">
+            <b:InvokeCommandAction Command="{Binding Prov1_WindowCloseCommand}"
+                                   PassEventArgsToCommand="True"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+    <Window.Resources>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <ListView Grid.RowSpan="2"
+                  Margin="10,10,0,10"
+                  Foreground="Black"
+                  ItemsSource="{Binding Prov1_Model.InitialData}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="I&#x2081;, мА"
+                                    Width="130">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ScaleFactorValue1Str, Mode=OneWay}"
+                                           TextAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="I&#x2082;, мА"
+                                    Width="130">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ScaleFactorValue2Str, Mode=OneWay}"
+                                           TextAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock 
+                   Text="I&#x2081; [мА]"
+                   FontSize="16"
+                   Margin="0,10,5,10"/>
+            <TextBox 
+                 Text="{Binding Prov1_Model.CalculatedData.Ioc1ValueStr, Mode=OneWay}"
+                 Width="100"
+                 Height="26"
+                 VerticalAlignment="Center"
+                 HorizontalContentAlignment="Center"
+                 VerticalContentAlignment="Center"
+                 FontSize="16"
+                 FontWeight="Bold"
+                 IsReadOnly="True"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock 
+                   Text="I&#x2082; [мА]"
+                   FontSize="16"
+                   Margin="0,10,5,10"/>
+            <TextBox 
+                 Text="{Binding Prov1_Model.CalculatedData.Ioc2ValueStr, Mode=OneWay}"
+                 Width="100"
+                 Height="26"
+                 VerticalAlignment="Center"
+                 HorizontalContentAlignment="Center"
+                 VerticalContentAlignment="Center"
+                 FontSize="16"
+                 FontWeight="Bold"
+                 IsReadOnly="True"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock Text="Ig [мА]"
+                       FontSize="16"
+                       Margin="0,10,5,10"/>
+            <TextBox Text="{Binding Prov1_Model.CalculatedData.IgValueStr, Mode=OneWay}"
+                     Width="100"
+                     Height="26"
+                     VerticalAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     FontSize="16"
+                     FontWeight="Bold"
+                     IsReadOnly="True"/>
+        </StackPanel>        
+
+        <Button Content="{Binding ButtonContent}" 
+                Grid.Column="1"
+                Margin="10,10,10,0"
+                Padding="25,1"
+                Command="{Binding ButtonStartOrStopCommand}"/>
+    </Grid>
+</Window>
