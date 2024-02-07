@@ -30,14 +30,66 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Header="Выбор оси Y на графике"
+                  Margin="10,10,0,0"
+                  IsEnabled="{Binding GroupBoxIsEnabled}">
+            <StackPanel Orientation="Horizontal">
+                <RadioButton Content="I, мА"
+                             GroupName="axesY"
+                             Margin="5"
+                             IsChecked="True"
+                             Command="{Binding AxesYRadiobuttonSelected}"
+                             CommandParameter="Ima"/>
+                <RadioButton Content="I, мкА"
+                             GroupName="axesY"
+                             Margin="0,5,5,5"
+                             Command="{Binding AxesYRadiobuttonSelected}"
+                             CommandParameter="Imka"/>
+                <RadioButton Content="U, В"
+                             GroupName="axesY"
+                             Margin="0,5,5,5"
+                             Command="{Binding AxesYRadiobuttonSelected}"
+                             CommandParameter="Uv"/>
+                <RadioButton Content="U, мВ"
+                             GroupName="axesY"
+                             Margin="0,5,5,5"
+                             Command="{Binding AxesYRadiobuttonSelected}"
+                             CommandParameter="Umv"/>
+            </StackPanel>
+        </GroupBox>
 
         <oxy:PlotView Grid.Row="1"
+                      Grid.ColumnSpan="2"
                       Model="{Binding ChartModel}"/>
 
-        <Button Content="{Binding ButtonContent}"
+        <ListView Grid.Row="1"
+                  Grid.Column="2"
+                  Margin="0,0,10,10"
+                  ItemsSource="{Binding ListviewDataPoints}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Дата и время"
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding DateTime}"/>
+                    <GridViewColumn Header="{Binding GridviewcolumnHeader}"
+                                    Width="100"
+                                    DisplayMemberBinding="{Binding Result}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Button Grid.Column="2"
+                Content="{Binding ButtonContent}"
                 Margin="10,10,10,0"
                 Padding="25,1"
                 HorizontalAlignment="Right"
+                VerticalAlignment="Top"
                 Command="{Binding ButtonStartOrStopCommand}"/>
     </Grid>
 </Window>
