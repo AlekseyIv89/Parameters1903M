@@ -73,7 +73,7 @@
             <TextBlock 
                    Text="I&#x2081; [мА]"
                    FontSize="16"
-                   Margin="0,10,5,10"/>
+                   Margin="15,10,5,10"/>
             <TextBox 
                  Text="{Binding Prov1_Model.CalculatedData.Ioc1ValueStr, Mode=OneWay}"
                  Width="100"
@@ -92,7 +92,7 @@
             <TextBlock 
                    Text="I&#x2082; [мА]"
                    FontSize="16"
-                   Margin="0,10,5,10"/>
+                   Margin="15,10,5,10"/>
             <TextBox 
                  Text="{Binding Prov1_Model.CalculatedData.Ioc2ValueStr, Mode=OneWay}"
                  Width="100"
@@ -108,7 +108,7 @@
         <StackPanel Grid.Row="4"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
-            <TextBlock Text="Ig [мА]"
+            <TextBlock Text="Ig [мА/g]"
                        FontSize="16"
                        Margin="0,10,5,10"/>
             <TextBox Text="{Binding Prov1_Model.CalculatedData.IgValueStr, Mode=OneWay}"

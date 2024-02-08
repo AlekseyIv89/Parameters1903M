@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Rizm" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">10.0001</Value>
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="AdjusterSecondName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

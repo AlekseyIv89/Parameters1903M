@@ -13,26 +13,26 @@ namespace Parameters1903M.Util
 
         public static double ConvertVoltToMilliVolt(double valueInVolt)
         {
-            double valueResult = valueInVolt * 1000.0;
+            decimal valueResult = (decimal)(valueInVolt) * 1000m;
             log.Debug($"КОНВЕРТЕР: {valueInVolt:F7} [В] -> {valueResult:F7} [мВ]");
 
-            return valueResult;
+            return decimal.ToDouble(valueResult);
         }
 
         public static double ConvertVoltToMilliAmpere(double valueInVolt)
         {
-            double valueResult = valueInVolt / GlobalVars.Rizm * 1_000.0;
+            decimal valueResult = (decimal)valueInVolt / (decimal)GlobalVars.Rizm * 1_000m;
             log.Debug($"КОНВЕРТЕР: {valueInVolt:F7} [В] -> {valueResult:F7} [мА] (R = {GlobalVars.Rizm:F5} Ом)");
 
-            return valueResult;
+            return decimal.ToDouble(valueResult);
         }
 
         public static double ConvertVoltToMicroAmpere(double valueInVolt)
         {
-            double valueResult = valueInVolt / GlobalVars.Rizm * 1_000_000.0;
+            decimal valueResult = (decimal)valueInVolt / (decimal)GlobalVars.Rizm * 1_000_000m;
             log.Debug($"КОНВЕРТЕР: {valueInVolt:F7} [В] -> {valueResult:F7} [мкА] (R = {GlobalVars.Rizm:F5} Ом)");
 
-            return valueResult;
+            return decimal.ToDouble(valueResult);
         }
     }
 }

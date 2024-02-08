@@ -90,6 +90,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         , MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
+                    prov1_WindowService.Multimeter.SetAverageTimeMillis(4_000);
+
                     await Task.Run(() =>
                     {
                         for (int i = 0; i < 5; i++)
