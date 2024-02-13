@@ -127,7 +127,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         while (!prov8_WindowService.Token.IsCancellationRequested && DateTime.Now.Subtract(dateTimeStart).TotalSeconds < secondsMeasureContinuing)
                         {
                             MeasureResult result = prov8_WindowService.Multimeter.Measure().Result;
-                            double resultValueToMilliA = Converter.ConvertVoltToMilliAmpere(result.Result);
+                            double resultValueToMilliA = Converter.ConvertVoltToMicroAmpere(result.Result);
                             Prov8_Model.InitialData.IValue = resultValueToMilliA;
                             Prov8_Model.CalculateDataWhileMeasureRunning(resultValueToMilliA);
 

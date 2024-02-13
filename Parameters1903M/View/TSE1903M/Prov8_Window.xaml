@@ -46,7 +46,7 @@
                       Model="{Binding ChartModel}"/>
 
         <TextBlock Grid.Column="1"
-                   Text="ΔIст [мА]"
+                   Text="ΔIст [мкА]"
                    FontSize="16"
                    Margin="0,10,5,10"/>
         <TextBox Grid.Column="2"
@@ -71,7 +71,7 @@
 
         <TextBlock Grid.Row="1"
                    Grid.Column="4"
-                   Text="Imax [мА]"
+                   Text="Imax [мкА]"
                    Margin="10,10,5,10"/>
         <TextBox Grid.Row="1"
                  Grid.Column="5"
@@ -86,7 +86,7 @@
 
         <TextBlock Grid.Row="2"
                    Grid.Column="4"
-                   Text="Imin [мА]"
+                   Text="Imin [мкА]"
                    Margin="10,10,5,10"/>
         <TextBox Grid.Row="2"
                  Grid.Column="5"

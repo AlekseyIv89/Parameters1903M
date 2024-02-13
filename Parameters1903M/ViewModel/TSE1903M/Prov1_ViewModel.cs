@@ -94,6 +94,9 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                     await Task.Run(() =>
                     {
+                        // Первую точку пропускаем
+                        double missingValue = prov1_WindowService.Multimeter.Measure().Result.Result;
+
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov1_WindowService.Multimeter.Measure().Result;
@@ -114,6 +117,9 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                     await Task.Run(() =>
                     {
+                        // Первую точку пропускаем
+                        double missingValue = prov1_WindowService.Multimeter.Measure().Result.Result;
+
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov1_WindowService.Multimeter.Measure(true).Result;

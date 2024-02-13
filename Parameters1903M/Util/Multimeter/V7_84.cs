@@ -74,10 +74,10 @@ namespace Parameters1903M.Util.Multimeter
                 do
                 {
                     string data = serialPort.ReadLine().Replace(',', '.').Trim();
-                    log.Debug($"В7-84 -> получена строка: '{data}'");
 
                     if (!inputData.IsMatch(data))
                     {
+                        log.Debug($"В7-84 -> ПРИНЯТО НЕКОРРЕКТНОЕ ЗНАЧЕНИЕ НАПРЯЖЕНИЯ, В: '{data}'");
                         using (StreamWriter sw = new StreamWriter("InputDataErrors.txt", true, System.Text.Encoding.Unicode))
                         {
                             await sw.WriteAsync(data.Trim() + "|");
@@ -86,14 +86,14 @@ namespace Parameters1903M.Util.Multimeter
                     }
 
                     double measuredValue = double.Parse(data.Split(' ')[0].Trim(), NumberStyles.Number, CultureInfo.InvariantCulture);
-                    log.Debug($"В7-84 -> преобразованное значение напряжения, В: '{measuredValue:F7}'");
+                    log.Debug($"В7-84 -> получена строка: '{data}', преобразованное значение напряжения, В: '{measuredValue:F7}'");
                     tempData.Add(measuredValue);
                 }
                 while (DateTime.Now.Subtract(startTime).TotalMilliseconds < averagingTimeMillis);
 
                 double averageValue = tempData.Average();
-                log.Debug($"В7-84 -> осредненное значение напряжения, В: '{averageValue:F7}'");
-                log.Debug($"В7-84 -> принято значений за установленное время осреднения ({averagingTimeMillis} мс), шт: '{tempData.Count}'");
+                log.Debug($"В7-84 -> осредненное значение напряжения, В: '{averageValue:F7}', " +
+                    $"время осреднения, мс: '{averagingTimeMillis}', значений, шт: '{tempData.Count}'");
                 return new MeasureResult(averageValue);
             });
             return measureResult;

@@ -73,7 +73,7 @@ namespace Parameters1903M.Model.TSE1903M
 
         private double Ig(ScaleFactorCalculatedData calculatedData)
         {
-            return (Math.Abs(calculatedData.Ioc1Value) + Math.Abs(calculatedData.Ioc2Value)) / 2.0 * Math.Sin(4 * Math.PI / 180);
+            return (Math.Abs(calculatedData.Ioc1Value) + Math.Abs(calculatedData.Ioc2Value)) / (2.0 * Math.Sin(4 * Math.PI / 180));
         }
 
         private async void ReadData()
