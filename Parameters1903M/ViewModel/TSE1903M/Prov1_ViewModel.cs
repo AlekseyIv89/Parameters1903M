@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using log4net;
+using Parameters1903M.View;
 
 namespace Parameters1903M.ViewModel.TSE1903M
 {
@@ -19,6 +20,28 @@ namespace Parameters1903M.ViewModel.TSE1903M
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public string Title => Parameter.Name;
+
+        private string currMeasureText;
+        public string CurrMeasureText 
+        {
+            get => currMeasureText;
+            set
+            {
+                currMeasureText = value;
+                OnPropertyChanged();
+            } 
+        }
+
+        private Visibility currMeasureVisibility = Visibility.Collapsed;
+        public Visibility CurrMeasureVisibility 
+        { 
+            get => currMeasureVisibility;   
+            set
+            {
+                currMeasureVisibility = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Parameter Parameter { get; }
 
@@ -80,15 +103,70 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         , MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
-                    message = "Повернуть призму с изделием на угол 90° в сторону маятника вокруг оси чувствительности.";
+                    prov1_WindowService.Multimeter.SetAverageTimeMillis(2_500);
+
+                    bool vistavkaFlag = true;
+                    do
+                    {
+                        //---------------------------- Начало "Вывод ТОС на экран" ----------------------------
+                        bool flag = true;
+                        CurrMeasureVisibility = Visibility.Visible;
+                        Task task = Task.Run(() =>
+                        {
+                            while (flag)
+                            {
+                                CurrMeasureText = $"{Converter.ConvertVoltToMicroAmpere(prov1_WindowService.Multimeter.Measure().Result.Result):F2} мкА";
+                            }
+                        });
+
+                        message = "Установить изделие поворотом плиты в исходное положение, при котором ТОС находится в пределах ±10мкА.";
+                        mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
+                            , MessageBoxImage.Information);
+                        if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
+
+                        flag = false;
+                        task.Wait();
+                        CurrMeasureVisibility = Visibility.Collapsed;
+                        //---------------------------- Конец "Вывод ТОС на экран" ----------------------------
+
+                        TimerWindow timerWindow1 = new TimerWindow(new TimeSpan(0, 0, 3)) { Owner = ProvWindow };
+                        if (timerWindow1.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
+
+                        await Task.Run(() =>
+                        {
+                            double missingValue = prov1_WindowService.Multimeter.Measure().Result.Result;
+                            missingValue = Converter.ConvertVoltToMicroAmpere(prov1_WindowService.Multimeter.Measure().Result.Result);
+
+                            double checkCurrentMicroA = 10.0;
+                            if (GlobalVars.IsDebugEnabled)
+                            {
+                                checkCurrentMicroA = double.MaxValue;
+                            }
+
+                            if (Math.Abs(missingValue) > checkCurrentMicroA)
+                            {
+                                message = "ТОС не соответствует допуску ±10 мкА. Повторите выставку изделия.";
+                                mbr = MessageBox.Show(message, label, MessageBoxButton.OKCancel
+                                    , MessageBoxImage.Warning);
+                                if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
+                            }
+                            else vistavkaFlag = false;
+                        });
+                    }
+                    while (vistavkaFlag);                    
+
+                    message = "С помощью оптического квадранта наклонить плоскость поверочной плиты на угол 4° с погрешностью ±10″ в сторону выходной колодки относительно исходного положения.";
                     mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
                         , MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
-                    message = "С помощью оптического квадранта наклонить плоскость поверочной плиты на угол 4° с погрешностью 10″ в сторону выходной колодки.";
-                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
-                        , MessageBoxImage.Information);
-                    if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
+                    TimeSpan timeSpan = new TimeSpan(0, 0, 10);
+                    if (GlobalVars.IsDebugEnabled)
+                    {
+                        timeSpan = new TimeSpan(0, 0, 2);
+                    }
+                    TimerWindow timerWindow = new TimerWindow(timeSpan) { Owner = ProvWindow };
+                    if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
 
                     prov1_WindowService.Multimeter.SetAverageTimeMillis(4_000);
 
@@ -110,10 +188,13 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     }, prov1_WindowService.Token);
                     if (prov1_WindowService.Token.IsCancellationRequested) throw new ProvCancelledByUserException(Parameter);
 
-                    message = "С помощью оптического квадранта наклонить плоскость поверочной плиты на угол 4° с погрешностью 10″ в сторону противоположную выходной колодки";
+                    message = "С помощью оптического квадранта наклонить плоскость поверочной плиты относительно исходного положения на угол 4° с погрешностью ±10″ в сторону противоположную выходной колодки";
                     mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
                         , MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
+
+                    timerWindow = new TimerWindow(timeSpan) { Owner = ProvWindow };
+                    if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
 
                     await Task.Run(() =>
                     {

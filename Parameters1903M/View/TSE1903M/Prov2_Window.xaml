@@ -20,67 +20,99 @@
                                    PassEventArgsToCommand="True"/>
         </b:EventTrigger>
     </b:Interaction.Triggers>
-    <Grid Margin="5">
+    <Window.Resources>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Uду1"
-                   Margin="10,10,5,10"/>
-        <TextBox Grid.Column="1"
-                 Text="{Binding Prov2_Model.InitialData.Udy1ValueStr, Mode=OneWay}"
-                 Width="100"
-                 Height="26"
-                 VerticalAlignment="Center"
-                 HorizontalContentAlignment="Center"
-                 VerticalContentAlignment="Center"
-                 IsReadOnly="True"/>
-        <TextBlock Grid.Column="2"
-                   Text="мВ"
-                   Margin="5,10,0,10"/>
+        <ListView Grid.RowSpan="2"
+                  Margin="10,10,0,10"
+                  Foreground="Black"
+                  ItemsSource="{Binding Prov2_Model.InitialData}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Uду&#x2081;, мВ"
+                            Width="130">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Udy1ValueStr, Mode=OneWay}"
+                                   TextAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Uду&#x2082;, мВ"
+                            Width="130">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Udy2ValueStr, Mode=OneWay}"
+                                   TextAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
-        <TextBlock Grid.Row="1"
-                   Margin="10,10,5,10"
-                   Text="Uду2"/>
-        <TextBox Grid.Row="1"
-                 Grid.Column="1"
-                 Text="{Binding Prov2_Model.InitialData.Udy2ValueStr, Mode=OneWay}"
-                 Width="100"
-                 Height="26"
-                 VerticalAlignment="Center"
-                 HorizontalContentAlignment="Center"
-                 VerticalContentAlignment="Center"
-                 IsReadOnly="True"/>
-        <TextBlock Grid.Row="1"
-                   Grid.Column="2"
-                   Text="мВ"
-                   Margin="5,10,0,10"/>
+        <StackPanel Grid.Row="2"
+                    Margin="10,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock Text="Uду1 [мВ]"
+                       Margin="21,10,5,10"/>
+            <TextBox Text="{Binding Prov2_Model.CalculatedData.PlusSduValueStr, Mode=OneWay}"
+                     Width="100"
+                     Height="26"
+                     VerticalAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     IsReadOnly="True"/>
+        </StackPanel>
 
-        <TextBlock Grid.Row="2"
-                   Margin="10,10,5,10"
-                   Text="Sду"/>
-        <TextBox Grid.Row="2"
-                 Grid.Column="1"
-                 Text="{Binding Prov2_Model.CalculatedData.SduValueStr, Mode=OneWay}"
-                 Width="100"
-                 Height="26"
-                 VerticalAlignment="Center"
-                 HorizontalContentAlignment="Center"
-                 VerticalContentAlignment="Center"
-                 FontWeight="Bold"
-                 IsReadOnly="True"/>
-        <TextBlock Grid.Row="2"
-                   Grid.Column="2"
-                   Text="мВ/...″"
-                   Margin="5,10,0,10"/>
+        <StackPanel Grid.Row="3"
+                    Margin="10,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock Margin="21,10,5,10"
+                       Text="Uду2 [мВ]"/>
+            <TextBox Text="{Binding Prov2_Model.CalculatedData.MinusSduValueStr, Mode=OneWay}"
+                     Width="100"
+                     Height="26"
+                     VerticalAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     IsReadOnly="True"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4"
+                    Margin="10,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock Margin="10,10,5,10"
+                       Text="Sду [мВ/...″]"/>
+            <TextBox Text="{Binding Prov2_Model.CalculatedData.SduValueStr, Mode=OneWay}"
+                     Width="100"
+                     Height="26"
+                     VerticalAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     FontWeight="Bold"
+                     IsReadOnly="True"/>
+        </StackPanel>        
 
         <Button Content="{Binding ButtonContent}"
                 Grid.Column="3"
@@ -89,15 +121,14 @@
                 Margin="20,5,5,0"
                 Padding="25,1"
                 Command="{Binding ButtonStartOrStopCommand}"/>
-        
-        <Button Content="Далее"
-                Visibility="{Binding BtnContinueVisibility}"
-                Grid.Row="2"
-                Grid.Column="3"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Right"
-                Margin="20,0,5,0"
-                Padding="25,1"
-                Command="{Binding ButtonContinueCommand}"/>
+
+        <TextBlock Grid.Row="5"
+                   Grid.ColumnSpan="4"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Margin="10"
+                   Visibility="{Binding CurrMeasureVisibility}"
+                   Text="{Binding CurrMeasureText}"
+                   HorizontalAlignment="Center"/>
     </Grid>
 </Window>

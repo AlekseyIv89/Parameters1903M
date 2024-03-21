@@ -166,6 +166,12 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 {
                     while (!prov0_WindowService.Token.IsCancellationRequested)
                     {
+                        // Пропускаем первую точку
+                        double missingValue = prov0_WindowService.Multimeter.Measure().Result.Result;
+                    }
+
+                    while (!prov0_WindowService.Token.IsCancellationRequested)
+                    {
                         MeasureResult result = prov0_WindowService.Multimeter.Measure().Result;
                         switch (axesY)
                         {

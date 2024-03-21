@@ -2,6 +2,7 @@
 using Parameters1903M.Util;
 using Parameters1903M.Util.Data;
 using System;
+using System.Collections.Generic;
 
 namespace Parameters1903M.Model.TSE1903M
 {
@@ -10,7 +11,7 @@ namespace Parameters1903M.Model.TSE1903M
         // Крутизна характеристики ДУ
         private readonly Parameter angleSensorSlope;
 
-        public AngleSensorSlopeInitialData InitialData { get; set; }
+        public List<AngleSensorSlopeInitialData> InitialData { get; set; }
         public AngleSensorSlopeCalculatedData CalculatedData { get; set; }
 
         public Prov2_Model(Parameter angleSensorSlope)
@@ -21,14 +22,18 @@ namespace Parameters1903M.Model.TSE1903M
 
         public void ClearAllData()
         {
-            InitialData.Clear();
+            for (int i = 0; i < InitialData.Count; i++)
+            {
+                InitialData[i].Clear();
+            }
+
             CalculatedData.Clear();
         }
 
         public void CalculateData()
         {
-            CalculatedData.PlusSduValue = InitialData.Udy1Value / 5;
-            CalculatedData.MinusSduValue = InitialData.Udy2Value / 5;
+            CalculatedData.PlusSduValue = Udy1(InitialData) / 5;
+            CalculatedData.MinusSduValue = Udy2(InitialData) / 5;
             CalculatedData.SduValue = (Math.Abs(CalculatedData.PlusSduValue) + Math.Abs(CalculatedData.MinusSduValue)) / 2;
 
             angleSensorSlope.Value = CalculatedData.SduValue;
@@ -36,9 +41,36 @@ namespace Parameters1903M.Model.TSE1903M
             WriteData();
         }
 
+        private double Udy1(List<AngleSensorSlopeInitialData> initialData)
+        {
+            double sum = 0;
+            for (int i = 1; i < initialData.Count; i++)
+            {
+                sum += initialData[i].Udy1Value;
+            }
+            return sum / 4; // ListScaleFactorInitialData.Count - 1 = 4 
+        }
+
+        private double Udy2(List<AngleSensorSlopeInitialData> initialData)
+        {
+            double sum = 0;
+            for (int i = 1; i < initialData.Count; i++)
+            {
+                sum += initialData[i].Udy2Value;
+            }
+            return sum / 4; // ListScaleFactorInitialData.Count - 1 = 4 
+        }
+
         private async void ReadData()
         {
-            InitialData = new AngleSensorSlopeInitialData();
+            InitialData = new List<AngleSensorSlopeInitialData>
+            {
+                new AngleSensorSlopeInitialData(),
+                new AngleSensorSlopeInitialData(),
+                new AngleSensorSlopeInitialData(),
+                new AngleSensorSlopeInitialData(),
+                new AngleSensorSlopeInitialData()
+            };
             CalculatedData = new AngleSensorSlopeCalculatedData();
 
             if (!string.IsNullOrWhiteSpace(angleSensorSlope.StrValue))
@@ -48,11 +80,14 @@ namespace Parameters1903M.Model.TSE1903M
                 string data = await Data.Read(filePath);
 
                 string[] fileData = data.Split('\n');
-                AngleSensorSlopeInitialData initData = JsonConvert.DeserializeObject<AngleSensorSlopeInitialData>(fileData[0]);
+                List<AngleSensorSlopeInitialData> initData = JsonConvert.DeserializeObject<List<AngleSensorSlopeInitialData>>(fileData[0]);
                 AngleSensorSlopeCalculatedData calcData = JsonConvert.DeserializeObject<AngleSensorSlopeCalculatedData>(fileData[1]);
 
-                InitialData.Udy1Value = initData.Udy1Value;
-                InitialData.Udy2Value = initData.Udy2Value;
+                for (int i = 0; i < initData.Count; i++)
+                {
+                    InitialData[i].Udy1Value = initData[i].Udy1Value;
+                    InitialData[i].Udy2Value = initData[i].Udy2Value;
+                }                
 
                 CalculatedData.PlusSduValue = calcData.PlusSduValue;
                 CalculatedData.MinusSduValue = calcData.MinusSduValue;
