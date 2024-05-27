@@ -89,6 +89,7 @@ namespace Parameters1903M.Model.TSE1903M
                     InitialData[i].Udy2Value = initData[i].Udy2Value;
                 }                
 
+                CalculatedData.ZeroSduValue= calcData.ZeroSduValue;
                 CalculatedData.PlusSduValue = calcData.PlusSduValue;
                 CalculatedData.MinusSduValue = calcData.MinusSduValue;
                 CalculatedData.SduValue = calcData.SduValue;
@@ -165,6 +166,9 @@ namespace Parameters1903M.Model.TSE1903M
     {
         private readonly int digits = 0;
 
+        private double zeroSduValue;
+        private string zeroSduValueStr;
+
         private double plusSduValue;
         private string plusSduValueStr;
 
@@ -173,6 +177,26 @@ namespace Parameters1903M.Model.TSE1903M
 
         private double sduValue;
         private string sduValueStr;
+
+        public double ZeroSduValue
+        {
+            get => zeroSduValue;
+            set
+            {
+                zeroSduValue = value;
+                ZeroSduValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+            }
+        }
+
+        public string ZeroSduValueStr
+        {
+            get => zeroSduValueStr;
+            private set
+            {
+                zeroSduValueStr = value;
+                OnPropertyChanged();
+            }
+        }
 
         public double PlusSduValue
         {

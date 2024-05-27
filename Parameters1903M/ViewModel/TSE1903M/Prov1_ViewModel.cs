@@ -97,8 +97,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 //---------------------------- Начало измерения ----------------------------
                 try
                 {
-                    message = "Установить призму с изделием на выставленную в горизонт поверочную плиту в исходное положение." + Environment.NewLine;
-                    message += "Замкнуть ОС.";
+                    message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение " +
+                        "и подключите изделие к стойке в режиме измерения ТОС, замкните ОС." + Environment.NewLine;
                     MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
                         , MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
@@ -119,7 +119,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                             }
                         });
 
-                        message = "Установить изделие поворотом плиты в исходное положение, при котором ТОС находится в пределах ±10мкА.";
+                        message = "Установите изделие поворотом плиты в исходное положение, при котором ТОС находится в пределах ±10 мкА.";
                         mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
                             , MessageBoxImage.Information);
                         if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);

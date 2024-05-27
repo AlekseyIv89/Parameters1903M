@@ -33,6 +33,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -72,6 +73,21 @@
                     Margin="10,0"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
+            <TextBlock Text="Uду0 [мВ]"
+                       Margin="21,10,5,10"/>
+            <TextBox Text="{Binding Prov2_Model.CalculatedData.ZeroSduValueStr, Mode=OneWay}"
+                     Width="100"
+                     Height="26"
+                     VerticalAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     IsReadOnly="True"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3"
+                    Margin="10,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
             <TextBlock Text="Uду1 [мВ]"
                        Margin="21,10,5,10"/>
             <TextBox Text="{Binding Prov2_Model.CalculatedData.PlusSduValueStr, Mode=OneWay}"
@@ -83,7 +99,7 @@
                      IsReadOnly="True"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="3"
+        <StackPanel Grid.Row="4"
                     Margin="10,0"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
@@ -98,7 +114,7 @@
                      IsReadOnly="True"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="4"
+        <StackPanel Grid.Row="5"
                     Margin="10,0"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
@@ -122,7 +138,7 @@
                 Padding="25,1"
                 Command="{Binding ButtonStartOrStopCommand}"/>
 
-        <TextBlock Grid.Row="5"
+        <TextBlock Grid.Row="6"
                    Grid.ColumnSpan="4"
                    FontSize="20"
                    FontWeight="Bold"

@@ -44,6 +44,7 @@ namespace Parameters1903M.Model.TSE1903M
             {
                 InitialData.UdyMaxValue = tempData.Max();
                 InitialData.UdyMinValue = tempData.Min();
+                CalculatedData.DeltaUdyValue = InitialData.UdyMaxValue - InitialData.UdyMinValue;
 
                 CalculatedData.AngleSensorZeroDriftValue = 60 * (InitialData.UdyMaxValue - InitialData.UdyMinValue) / angleSensorSlope.Value;
             }
@@ -76,6 +77,7 @@ namespace Parameters1903M.Model.TSE1903M
                 InitialData.UdyMaxValue = initData.UdyMaxValue;
                 InitialData.UdyMinValue = initData.UdyMinValue;
 
+                CalculatedData.DeltaUdyValue = calcData.DeltaUdyValue;
                 CalculatedData.AngleSensorZeroDriftValue = calcData.AngleSensorZeroDriftValue;
             }
         }
@@ -175,6 +177,29 @@ namespace Parameters1903M.Model.TSE1903M
     {
         private readonly int digits = 1;
 
+        private double deltaUdyValue;
+        private string deltaUdyValueStr;
+
+        public double DeltaUdyValue
+        {
+            get => deltaUdyValue;
+            set
+            {
+                deltaUdyValue = value;
+                DeltaUdyValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+            }
+        }
+
+        public string DeltaUdyValueStr
+        {
+            get => deltaUdyValueStr;
+            private set
+            {
+                deltaUdyValueStr = value;
+                OnPropertyChanged();
+            }
+        }
+
         private double angleSensorZeroDriftValue;
         private string angleSensorZeroDriftValueStr;
 
@@ -200,6 +225,8 @@ namespace Parameters1903M.Model.TSE1903M
 
         public void Clear()
         {
+            DeltaUdyValue = default;
+            DeltaUdyValueStr = default;
             AngleSensorZeroDriftValue = default;
             AngleSensorZeroDriftValueStr = default;
         }

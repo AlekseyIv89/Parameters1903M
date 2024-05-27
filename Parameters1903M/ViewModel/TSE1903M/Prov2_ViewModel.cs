@@ -90,11 +90,17 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 //---------------------------- Начало измерения ----------------------------
                 try
                 {
-                    message = "Установить призму с изделием на выставленную в горизонт поверочную плиту в исходное положение.";
+                    message = "Соедините  перемычками клемму «Hi» мультиметра c клеммой «ДУ» блока ВУ-23 и клемму «Lo» мультиметра с клеммой «Экран», " +
+                        "предварительно отключив мультиметр от штатных клемм измерительной стойки.";
                     MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                    message = "Повернуть призму с изделием на угол 90° в сторону маятника вокруг оси чувствительности.";
+                    message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение и " +
+                        "подключите изделие к стойке в режиме измерения выходного напряжения UДУ и его переменной составляющей.";
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                    message = "Поверните призму с изделием на угол 90° в сторону маятника вокруг оси чувствительности.";
                     mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
@@ -115,6 +121,11 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         });
 
                         message = "Наклоном поверочной плиты установить выходное напряжение ДУ в пределах ±10 мВ (положение 0).";
+                        mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
+                            , MessageBoxImage.Information);
+                        if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Нажмите кнопку \"ОК\" для измерения значения Uду0.";
                         mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
                             , MessageBoxImage.Information);
                         if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
@@ -146,6 +157,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
                                 if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
                             }
                             else vistavkaFlag = false;
+
+                            Prov2_Model.CalculatedData.ZeroSduValue = missingValue;
                         });
                     }
                     while (vistavkaFlag);
@@ -166,6 +179,9 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                     await Task.Run(() =>
                     {
+                        // Первую точку пропускаем
+                        double missingValue = prov2_WindowService.Multimeter.Measure().Result.Result;
+
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov2_WindowService.Multimeter.Measure().Result;
@@ -185,6 +201,9 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                     await Task.Run(() =>
                     {
+                        // Первую точку пропускаем
+                        double missingValue = prov2_WindowService.Multimeter.Measure().Result.Result;
+
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov2_WindowService.Multimeter.Measure(true).Result;
