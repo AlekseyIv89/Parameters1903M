@@ -3,6 +3,7 @@ using Parameters1903M.Util;
 using Parameters1903M.Util.Data;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Parameters1903M.Model.TSE1903M
 {
@@ -33,12 +34,16 @@ namespace Parameters1903M.Model.TSE1903M
         public void CalculateData()
         {
             CalculatedData.PlusSduValue = Udy1(InitialData) / 5;
-            CalculatedData.MinusSduValue = Udy2(InitialData) / 5;
-            CalculatedData.SduValue = (Math.Abs(CalculatedData.PlusSduValue) + Math.Abs(CalculatedData.MinusSduValue)) / 2;
 
-            angleSensorSlope.Value = CalculatedData.SduValue;
+            if (!string.IsNullOrEmpty(InitialData[0].Udy2ValueStr))
+            {
+                CalculatedData.MinusSduValue = Udy2(InitialData) / 5;
+                CalculatedData.SduValue = (Math.Abs(CalculatedData.PlusSduValue) + Math.Abs(CalculatedData.MinusSduValue)) / 2;
 
-            WriteData();
+                angleSensorSlope.Value = CalculatedData.SduValue;
+
+                WriteData();
+            }                
         }
 
         private double Udy1(List<AngleSensorSlopeInitialData> initialData)
@@ -100,6 +105,28 @@ namespace Parameters1903M.Model.TSE1903M
         {
             Data.Save(string.Join("\n", JsonConvert.SerializeObject(InitialData), JsonConvert.SerializeObject(CalculatedData))
                 , $@"{GlobalVars.DeviceNum}_{angleSensorSlope.Num}", false);
+        }
+
+        public async Task<AngleSensorSlopeCalculatedData> GetAngleSensorSlopeCalculatedData() 
+        {
+            CalculatedData = new AngleSensorSlopeCalculatedData();
+            if (!string.IsNullOrWhiteSpace(angleSensorSlope.StrValue))
+            {
+                string filePath = Data.CheckFullFileName(GlobalVars.SavePath, $@"{GlobalVars.DeviceNum}_{angleSensorSlope.Num}");
+
+                string data = await Data.Read(filePath);
+
+                string[] fileData = data.Split('\n');
+                AngleSensorSlopeCalculatedData calcData = JsonConvert.DeserializeObject<AngleSensorSlopeCalculatedData>(fileData[1]);
+
+                CalculatedData.ZeroSduValue = calcData.ZeroSduValue;
+                CalculatedData.PlusSduValue = calcData.PlusSduValue;
+                CalculatedData.MinusSduValue = calcData.MinusSduValue;
+                CalculatedData.SduValue = calcData.SduValue;
+            }
+
+
+            return CalculatedData;
         }
     }
 

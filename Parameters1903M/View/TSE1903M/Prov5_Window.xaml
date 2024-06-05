@@ -34,7 +34,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Uду1 [мВ]"
+        <TextBlock Text="U1 [мВ]"
                    Margin="10,10,5,10"/>
         <TextBox Grid.Column="1"
                  Text="{Binding Prov5_Model.InitialData.Udy1ValueStr, Mode=OneWay}"
@@ -59,7 +59,7 @@
 
         <TextBlock Grid.Row="1"
                    Margin="10,10,5,10"
-                   Text="Uду2 [мВ]"/>
+                   Text="U2 [мВ]"/>
         <TextBox Grid.Row="1"
                  Grid.Column="1"
                  Text="{Binding Prov5_Model.InitialData.Udy2ValueStr, Mode=OneWay}"

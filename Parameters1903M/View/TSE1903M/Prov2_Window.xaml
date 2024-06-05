@@ -88,8 +88,8 @@
                     Margin="10,0"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
-            <TextBlock Text="Uду1 [мВ]"
-                       Margin="21,10,5,10"/>
+            <TextBlock Text="+S [мВ/...′]"
+                       Margin="19,10,5,10"/>
             <TextBox Text="{Binding Prov2_Model.CalculatedData.PlusSduValueStr, Mode=OneWay}"
                      Width="100"
                      Height="26"
@@ -103,8 +103,8 @@
                     Margin="10,0"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
-            <TextBlock Margin="21,10,5,10"
-                       Text="Uду2 [мВ]"/>
+            <TextBlock Margin="22,10,5,10"
+                       Text="-S [мВ/...′]"/>
             <TextBox Text="{Binding Prov2_Model.CalculatedData.MinusSduValueStr, Mode=OneWay}"
                      Width="100"
                      Height="26"
@@ -118,8 +118,8 @@
                     Margin="10,0"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
-            <TextBlock Margin="10,10,5,10"
-                       Text="Sду [мВ/...″]"/>
+            <TextBlock Margin="27,10,5,10"
+                       Text="S [мВ/...′]"/>
             <TextBox Text="{Binding Prov2_Model.CalculatedData.SduValueStr, Mode=OneWay}"
                      Width="100"
                      Height="26"

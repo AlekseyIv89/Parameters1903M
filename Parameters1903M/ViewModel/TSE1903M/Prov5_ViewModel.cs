@@ -109,6 +109,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     }, prov5_WindowService.Token);
                     if (prov5_WindowService.Token.IsCancellationRequested) throw new ProvCancelledByUserException(Parameter);
 
+                    Prov5_Model.CalculateData();
+
                     message = "Наклоните плоскость поверочной плиты от исходного положения на угол минус (20 ± 1) угл.мин в сторону противоположную выходной колодке изделия.";
                     mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);

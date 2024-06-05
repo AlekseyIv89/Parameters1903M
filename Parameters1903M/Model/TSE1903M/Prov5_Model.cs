@@ -12,7 +12,7 @@ namespace Parameters1903M.Model.TSE1903M
         private readonly Parameter mechanicalStopAngle;
 
         // Крутизна характеристики ДУ
-        private readonly Parameter angleSensorSlope;
+        private AngleSensorSlopeCalculatedData angleSensorSlopeCalculatedData;
 
         public MechanicalStopAngleInitialData InitialData { get; set; }
         public MechanicalStopAngleCalculatedData CalculatedData { get; set; }
@@ -20,8 +20,13 @@ namespace Parameters1903M.Model.TSE1903M
         public Prov5_Model(Parameter mechanicalStopAngle)
         {
             this.mechanicalStopAngle = mechanicalStopAngle;
-            angleSensorSlope = new MainWindowService().GetParameterByName("Крутизна характеристики ДУ, Sду");
+            GetAngleSensorSlopeCalculatedData();
             ReadData();
+        }
+
+        private async void GetAngleSensorSlopeCalculatedData()
+        {
+            angleSensorSlopeCalculatedData = await new Prov2_Model(new MainWindowService().GetParameterByName("Крутизна характеристики ДУ, Sду")).GetAngleSensorSlopeCalculatedData();
         }
 
         public void ClearAllData()
@@ -32,18 +37,19 @@ namespace Parameters1903M.Model.TSE1903M
 
         public void CalculateData()
         {
-            Prov2_Model prov2_Model = new Prov2_Model(angleSensorSlope);
-            // TODO: разобраться, почему получаются нули, если в отладке конструктор срабатывает ОК
-            double plusS = prov2_Model.CalculatedData.PlusSduValue;
-            double minusS = prov2_Model.CalculatedData.MinusSduValue;
-
+            double plusS = angleSensorSlopeCalculatedData.PlusSduValue;
             CalculatedData.PlusAlphaValue = InitialData.Udy1Value / plusS;
-            CalculatedData.MinusAlphaValue = InitialData.Udy2Value / minusS;
-            CalculatedData.TotalAlphaValueStr = $"{CalculatedData.PlusAlphaValueStr};{CalculatedData.MinusAlphaValueStr}";
 
-            mechanicalStopAngle.StrValue = CalculatedData.TotalAlphaValueStr;
+            if (!string.IsNullOrWhiteSpace(InitialData.Udy2ValueStr))
+            {
+                double minusS = angleSensorSlopeCalculatedData.MinusSduValue;
+                CalculatedData.MinusAlphaValue = InitialData.Udy2Value / minusS;
+                CalculatedData.TotalAlphaValueStr = $"{CalculatedData.PlusAlphaValueStr};{CalculatedData.MinusAlphaValueStr}";
 
-            WriteData();
+                mechanicalStopAngle.StrValue = CalculatedData.TotalAlphaValueStr;
+
+                WriteData();
+            }
         }
 
         private async void ReadData()

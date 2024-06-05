@@ -192,6 +192,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     }, prov2_WindowService.Token);
                     if (prov2_WindowService.Token.IsCancellationRequested) throw new ProvCancelledByUserException(Parameter);
 
+                    Prov2_Model.CalculateData();
+
                     message = "С помощью оптического квадранта наклонить плоскость поверочной плиты на угол -5´ в сторону, противоположную выходной колодке изделия относительно положения 0";
                     mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);

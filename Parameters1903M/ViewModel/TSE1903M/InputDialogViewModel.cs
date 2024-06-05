@@ -57,13 +57,14 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
         private void ParameterMeasure()
         {
-            string inputValueStr = InputModel.InputValue.Replace(',', '.');
-            if (double.TryParse(inputValueStr, NumberStyles.Number, CultureInfo.InvariantCulture, out double inputValue))
+            try
             {
+                string inputValueStr = InputModel.InputValue.Replace(',', '.');
+                double inputValue = double.Parse(inputValueStr, NumberStyles.Number, CultureInfo.InvariantCulture);
                 Parameter.Value = inputValue;
                 ButtonCancelCommand.Execute(true);
             }
-            else
+            catch
             {
                 string message = $"Неверно введено значение параметра \"{Parameter.Name}\"" + Environment.NewLine;
                 message += "Повторите ввод";

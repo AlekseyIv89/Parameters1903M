@@ -14,7 +14,7 @@ namespace Parameters1903M.Model.TSE1903M
         private readonly Parameter angleSensorZeroDrift;
 
         // Крутизна характеристики ДУ
-        private readonly Parameter angleSensorSlope;
+        private AngleSensorSlopeCalculatedData angleSensorSlopeCalculatedData;
 
         public AngleSensorZeroDriftInitialData InitialData { get; private set; }
         public AngleSensorZeroDriftCalculatedData CalculatedData { get; private set; }
@@ -24,8 +24,13 @@ namespace Parameters1903M.Model.TSE1903M
         public Prov3_Model(Parameter angleSensorZeroDrift)
         {
             this.angleSensorZeroDrift = angleSensorZeroDrift;
-            angleSensorSlope = new MainWindowService().GetParameterByName("Крутизна характеристики ДУ, Sду");
+            GetAngleSensorSlopeCalculatedData();
             ReadData();
+        }
+
+        private async void GetAngleSensorSlopeCalculatedData()
+        {
+            angleSensorSlopeCalculatedData = await new Prov2_Model(new MainWindowService().GetParameterByName("Крутизна характеристики ДУ, Sду")).GetAngleSensorSlopeCalculatedData();
         }
 
         public void ClearAllData()
@@ -46,7 +51,8 @@ namespace Parameters1903M.Model.TSE1903M
                 InitialData.UdyMinValue = tempData.Min();
                 CalculatedData.DeltaUdyValue = InitialData.UdyMaxValue - InitialData.UdyMinValue;
 
-                CalculatedData.AngleSensorZeroDriftValue = 60 * (InitialData.UdyMaxValue - InitialData.UdyMinValue) / angleSensorSlope.Value;
+                CalculatedData.AngleSensorZeroDriftValue = 60 * (InitialData.UdyMaxValue - InitialData.UdyMinValue) / 
+                    angleSensorSlopeCalculatedData.SduValue;
             }
         }
 
