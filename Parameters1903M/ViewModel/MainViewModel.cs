@@ -27,7 +27,7 @@ namespace Parameters1903M.ViewModel
 
         public DeviceData DeviceData { get; set; }
 
-        public string Title => ProgramInfo.SoftwareNameWithVersion;
+        public string Title { get; private set; } = ProgramInfo.SoftwareNameWithVersion;
 
         private readonly MainWindowService mainWindowService;
         private readonly StartWindowService startWindowService;
@@ -160,6 +160,7 @@ namespace Parameters1903M.ViewModel
 
 #if DEBUG
             GlobalVars.IsDebugEnabled = true;
+            Title += " DEBUG MODE ENABLED";
 #endif
         }
 
