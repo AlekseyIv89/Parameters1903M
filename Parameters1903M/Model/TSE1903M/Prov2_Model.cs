@@ -125,7 +125,6 @@ namespace Parameters1903M.Model.TSE1903M
                 CalculatedData.SduValue = calcData.SduValue;
             }
 
-
             return CalculatedData;
         }
     }

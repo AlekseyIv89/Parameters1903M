@@ -44,6 +44,11 @@ namespace Parameters1903M.Util.Multimeter
             }
         }
 
+        public void ResetAverageTime()
+        {
+            averagingTimeMillis = 0.0;
+        }
+
         public CommunicationInterface Connect(string address)
         {
             serialPort = new SerialPort(address, 9600, Parity.None, 8, StopBits.One);

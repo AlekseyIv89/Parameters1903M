@@ -126,7 +126,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         {
                             while (flag)
                             {
-                                Prov3_Model.InitialData.UdyValue = Converter.ConvertVoltToMilliVolt(prov3_WindowService.Multimeter.Measure().Result.Result);
+                                Prov3_Model.InitialData.UdyValue = Converter.ConvertVoltToMilliVolt(prov3_WindowService.Multimeter.Measure().Result.Value);
                             }
                         });
 
@@ -149,8 +149,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                         await Task.Run(() =>
                         {
-                            double missingValue = prov3_WindowService.Multimeter.Measure().Result.Result;
-                            missingValue = Converter.ConvertVoltToMilliVolt(prov3_WindowService.Multimeter.Measure().Result.Result);
+                            double missingValue = prov3_WindowService.Multimeter.Measure().Result.Value;
+                            missingValue = Converter.ConvertVoltToMilliVolt(prov3_WindowService.Multimeter.Measure().Result.Value);
 
                             double checkCurrentMicroA = 10.0;
                             if (GlobalVars.IsDebugEnabled)
@@ -190,11 +190,11 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         while (!prov3_WindowService.Token.IsCancellationRequested && DateTime.Now.Subtract(dateTimeStart).TotalSeconds < secondsMeasureContinuing)
                         {
                             MeasureResult result = prov3_WindowService.Multimeter.Measure().Result;
-                            double resultValueToMilliV = Converter.ConvertVoltToMilliVolt(result.Result);
+                            double resultValueToMilliV = Converter.ConvertVoltToMilliVolt(result.Value);
                             Prov3_Model.InitialData.UdyValue = resultValueToMilliV;
                             Prov3_Model.CalculateDataWhileMeasureRunning(resultValueToMilliV);
 
-                            Points.Add(new DataPoint(DateTimeAxis.ToDouble(resultValueToMilliV), result.Result));
+                            Points.Add(new DataPoint(DateTimeAxis.ToDouble(resultValueToMilliV), result.Value));
                             ChartModel.InvalidatePlot(true);
                         }
                     }, prov3_WindowService.Token);

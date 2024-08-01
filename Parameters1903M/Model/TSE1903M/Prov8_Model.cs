@@ -14,7 +14,7 @@ namespace Parameters1903M.Model.TSE1903M
         private readonly Parameter stabilityOfPositionOS;
 
         // Масштабный коэффициент
-        private readonly Parameter scaleFactorParameter;
+        private ScaleFactorCalculatedData scaleFactorCalculatedData;
 
         public StabilityOfPositionOSInitialData InitialData { get; private set; }
         public StabilityOfPositionOSCalculatedData CalculatedData { get; private set; }
@@ -24,8 +24,13 @@ namespace Parameters1903M.Model.TSE1903M
         public Prov8_Model(Parameter stabilityOfPositionOS)
         {
             this.stabilityOfPositionOS = stabilityOfPositionOS;
-            scaleFactorParameter = new MainWindowService().GetParameterByName("Масштабный коэффициент, Ig");
+            GetAngleSensorSlopeCalculatedData();
             ReadData();
+        }
+
+        private async void GetAngleSensorSlopeCalculatedData()
+        {
+            scaleFactorCalculatedData = await new Prov1_Model(new MainWindowService().GetParameterByName("Масштабный коэффициент, Ig")).GetScaleFactorCalculatedData();
         }
 
         public void ClearAllData()
@@ -45,8 +50,8 @@ namespace Parameters1903M.Model.TSE1903M
                 InitialData.IMaxValue = tempData.Max();
                 InitialData.IMinValue = tempData.Min();
 
-                CalculatedData.DeltaIstValue =
-                    (InitialData.IMaxValue - InitialData.IMinValue) / (5E-6 * scaleFactorParameter.Value);
+                CalculatedData.DeltaIstValue = Math.Abs(InitialData.IMaxValue - InitialData.IMinValue) / 
+                    (5E-6 * scaleFactorCalculatedData.IgValue);
             }
         }
 

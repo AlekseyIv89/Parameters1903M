@@ -167,7 +167,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     while (!prov0_WindowService.Token.IsCancellationRequested)
                     {
                         // Пропускаем первую точку
-                        double missingValue = prov0_WindowService.Multimeter.Measure().Result.Result;
+                        double missingValue = prov0_WindowService.Multimeter.Measure().Result.Value;
                     }
 
                     while (!prov0_WindowService.Token.IsCancellationRequested)
@@ -177,19 +177,19 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         {
                             case AxesY.Ima:
                                 ListviewDataPoints.Add(result);
-                                Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), Converter.ConvertVoltToMilliAmpere(result.Result)));
+                                Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), Converter.ConvertVoltToMilliAmpere(result.Value)));
                                 break;
                             case AxesY.Imka:
                                 ListviewDataPoints.Add(result);
-                                Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), Converter.ConvertVoltToMicroAmpere(result.Result)));
+                                Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), Converter.ConvertVoltToMicroAmpere(result.Value)));
                                 break;
                             case AxesY.Uv:
                                 ListviewDataPoints.Add(result);
-                                Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), result.Result));
+                                Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), result.Value));
                                 break;
                             case AxesY.Umv:
                                 ListviewDataPoints.Add(result);
-                                Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), Converter.ConvertVoltToMilliVolt(result.Result)));
+                                Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), Converter.ConvertVoltToMilliVolt(result.Value)));
                                 break;
                             default:
                                 break;

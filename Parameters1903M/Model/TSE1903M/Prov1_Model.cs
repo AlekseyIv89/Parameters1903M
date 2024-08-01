@@ -4,6 +4,7 @@ using Parameters1903M.Util.Data;
 using System;
 using System.Collections.Generic;
 using log4net;
+using System.Threading.Tasks;
 
 namespace Parameters1903M.Model.TSE1903M
 {
@@ -114,6 +115,26 @@ namespace Parameters1903M.Model.TSE1903M
         {
             Data.Save(string.Join("\n", JsonConvert.SerializeObject(InitialData), JsonConvert.SerializeObject(CalculatedData))
                 , $@"{GlobalVars.DeviceNum}_{scaleFactor.Num}", false);
+        }
+
+        public async Task<ScaleFactorCalculatedData> GetScaleFactorCalculatedData()
+        {
+            CalculatedData = new ScaleFactorCalculatedData();
+            if (!string.IsNullOrWhiteSpace(scaleFactor.StrValue))
+            {
+                string filePath = Data.CheckFullFileName(GlobalVars.SavePath, $@"{GlobalVars.DeviceNum}_{scaleFactor.Num}");
+
+                string data = await Data.Read(filePath);
+
+                string[] fileData = data.Split('\n');
+                ScaleFactorCalculatedData calcData = JsonConvert.DeserializeObject<ScaleFactorCalculatedData>(fileData[1]);
+
+                CalculatedData.IgValue = calcData.IgValue;
+                CalculatedData.Ioc1Value = calcData.Ioc1Value;
+                CalculatedData.Ioc2Value = calcData.Ioc2Value;
+            }
+
+            return CalculatedData;
         }
     }
 

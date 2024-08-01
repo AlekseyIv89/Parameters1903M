@@ -87,7 +87,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov14_WindowService.Multimeter.Measure().Result;
-                            Prov14_Model.InitialData[i].ScaleFactorPendulumDownValue1 = Converter.ConvertVoltToMilliAmpere(result.Result);
+                            Prov14_Model.InitialData[i].ScaleFactorPendulumDownValue1 = Converter.ConvertVoltToMilliAmpere(result.Value);
 
                             if (prov14_WindowService.Token.IsCancellationRequested) return;
                         }
@@ -104,7 +104,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov14_WindowService.Multimeter.Measure(true).Result;
-                            Prov14_Model.InitialData[i].ScaleFactorPendulumDownValue2 = Converter.ConvertVoltToMilliAmpere(result.Result);
+                            Prov14_Model.InitialData[i].ScaleFactorPendulumDownValue2 = Converter.ConvertVoltToMilliAmpere(result.Value);
 
                             if (prov14_WindowService.Token.IsCancellationRequested) return;
                         }

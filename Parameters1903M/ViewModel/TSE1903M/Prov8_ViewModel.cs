@@ -44,6 +44,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
         public Prov8_Model Prov8_Model { get; private set; }
         private Prov8_Window ProvWindow { get => prov8_WindowService.GetProvWindow(); }
 
+        private IMeasure Multimeter { get => prov8_WindowService.Multimeter; }
+
         public Prov8_ViewModel(Parameter parameter)
         {
             ChartModel.Axes.Add(new DateTimeAxis
@@ -78,11 +80,12 @@ namespace Parameters1903M.ViewModel.TSE1903M
         {
             if (ButtonContent.Equals(BUTTON_START))
             {
+                string message;
+                string label = Parameter.Name.Split(',')[0];
+
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {
-                    string message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
-                    string label = Parameter.Name.Split(',')[0];
-
+                    message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
                     MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (mbr == MessageBoxResult.Yes)
                     {
@@ -101,11 +104,11 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 //---------------------------- Начало измерения ----------------------------
                 try
                 {
-                    string message = "Установить призму с изделием на выставленную в горизонт повероную плиту в исходное положение." + Environment.NewLine;
-                    message += "Накрыть кожухом." + Environment.NewLine;
-                    message += "Нажать \"Ок\" для начала отсчета 60-минутной временной задержки.";
+                    message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение, " +
+                        "подключите изделие к стойке в режиме измерения ТОС, замкните  ОС и накройте призму с изделием кожухом." + Environment.NewLine;
+                    message += "Нажать \"ОК\" для начала отсчета 60-минутной временной задержки.";
                     MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                    if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+                    if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
                     TimeSpan timeBetweenMeasurements = new TimeSpan(1, 0, 0);
                     if (GlobalVars.IsDebugEnabled)
@@ -114,6 +117,10 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     }
                     TimerWindow timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
                     if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
+
+                    message = "Нажмите \"ОК\" для начала приема информации.";
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
                     DateTime dateTimeStart = DateTime.Now;
                     int secondsMeasureContinuing = 7200;
@@ -124,14 +131,25 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                     await Task.Run(() =>
                     {
+                        int averageTimeInMillis = 20_000;
+                        if (GlobalVars.IsDebugEnabled)
+                        {
+                            averageTimeInMillis = 1_000;
+                        }
+
+                        Multimeter.ResetAverageTime();
+                        Multimeter.SetAverageTimeMillis(averageTimeInMillis);
+
+                        double missingValue = Multimeter.Measure().Result.Value;
+
                         while (!prov8_WindowService.Token.IsCancellationRequested && DateTime.Now.Subtract(dateTimeStart).TotalSeconds < secondsMeasureContinuing)
                         {
-                            MeasureResult result = prov8_WindowService.Multimeter.Measure().Result;
-                            double resultValueToMilliA = Converter.ConvertVoltToMicroAmpere(result.Result);
-                            Prov8_Model.InitialData.IValue = resultValueToMilliA;
-                            Prov8_Model.CalculateDataWhileMeasureRunning(resultValueToMilliA);
+                            MeasureResult result = Multimeter.Measure().Result;
+                            double resultValueToMicroAmpere = Converter.ConvertVoltToMicroAmpere(result.Value);
+                            Prov8_Model.InitialData.IValue = resultValueToMicroAmpere;
+                            Prov8_Model.CalculateDataWhileMeasureRunning(resultValueToMicroAmpere);
 
-                            Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), resultValueToMilliA));
+                            Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), resultValueToMicroAmpere));
                             ChartModel.InvalidatePlot(true);
                         }
                     }, prov8_WindowService.Token);
@@ -141,7 +159,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 }
                 catch (ProvCancelledByUserException e)
                 {
-                    string message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
+                    message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
                     MessageBox.Show(ProvWindow, message, e.Parameter.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 //---------------------------- Конец измерения -----------------------------

@@ -55,6 +55,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
         public Prov1_Model Prov1_Model { get; private set; }
         private Prov1_Window ProvWindow { get => prov1_WindowService.GetProvWindow(); }
 
+        private IMeasure Multimeter { get => prov1_WindowService.Multimeter; }
+
         public Prov1_ViewModel(Parameter parameter)
         {
             log4net.Config.XmlConfigurator.Configure();
@@ -103,7 +105,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         , MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
-                    prov1_WindowService.Multimeter.SetAverageTimeMillis(2_500);
+                    Multimeter.SetAverageTimeMillis(2_500);
 
                     bool vistavkaFlag = true;
                     do
@@ -115,7 +117,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         {
                             while (flag)
                             {
-                                CurrMeasureText = $"{Converter.ConvertVoltToMicroAmpere(prov1_WindowService.Multimeter.Measure().Result.Result):F2} мкА";
+                                CurrMeasureText = $"{Converter.ConvertVoltToMicroAmpere(Multimeter.Measure().Result.Value):F2} мкА";
                             }
                         });
 
@@ -134,8 +136,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                         await Task.Run(() =>
                         {
-                            double missingValue = prov1_WindowService.Multimeter.Measure().Result.Result;
-                            missingValue = Converter.ConvertVoltToMicroAmpere(prov1_WindowService.Multimeter.Measure().Result.Result);
+                            double missingValue = Multimeter.Measure().Result.Value;
+                            missingValue = Converter.ConvertVoltToMicroAmpere(Multimeter.Measure().Result.Value);
 
                             double checkCurrentMicroA = 10.0;
                             if (GlobalVars.IsDebugEnabled)
@@ -168,19 +170,19 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     TimerWindow timerWindow = new TimerWindow(timeSpan) { Owner = ProvWindow };
                     if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
 
-                    prov1_WindowService.Multimeter.SetAverageTimeMillis(4_000);
+                    Multimeter.SetAverageTimeMillis(4_000);
 
                     await Task.Run(() =>
                     {
                         // Первую точку пропускаем
-                        double missingValue = prov1_WindowService.Multimeter.Measure().Result.Result;
+                        double missingValue = Multimeter.Measure().Result.Value;
 
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = prov1_WindowService.Multimeter.Measure().Result;
-                            Prov1_Model.InitialData[i].ScaleFactorValue1 = Converter.ConvertVoltToMilliAmpere(result.Result);
+                            MeasureResult result = Multimeter.Measure().Result;
+                            Prov1_Model.InitialData[i].ScaleFactorValue1 = Converter.ConvertVoltToMilliAmpere(result.Value);
 
-                            log.Debug($"U1({i + 1}) [В] = {result.Result:F7}, Rос, [Ом] = {GlobalVars.Rizm:F5}");
+                            log.Debug($"U1({i + 1}) [В] = {result.Value:F7}, Rос, [Ом] = {GlobalVars.Rizm:F5}");
                             log.Debug($"I1({i + 1}) [мА] = {Prov1_Model.InitialData[i].ScaleFactorValue1:F7}");
 
                             if (prov1_WindowService.Token.IsCancellationRequested) return;
@@ -199,14 +201,14 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     await Task.Run(() =>
                     {
                         // Первую точку пропускаем
-                        double missingValue = prov1_WindowService.Multimeter.Measure().Result.Result;
+                        double missingValue = Multimeter.Measure().Result.Value;
 
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = prov1_WindowService.Multimeter.Measure(true).Result;
-                            Prov1_Model.InitialData[i].ScaleFactorValue2 = Converter.ConvertVoltToMilliAmpere(result.Result);
+                            MeasureResult result = Multimeter.Measure(true).Result;
+                            Prov1_Model.InitialData[i].ScaleFactorValue2 = Converter.ConvertVoltToMilliAmpere(result.Value);
 
-                            log.Debug($"U2({i + 1}) [В] = {result.Result:F7}, Rос, [Ом] = {GlobalVars.Rizm:F5}");
+                            log.Debug($"U2({i + 1}) [В] = {result.Value:F7}, Rос, [Ом] = {GlobalVars.Rizm:F5}");
                             log.Debug($"I2({i + 1}) [мА] = {Prov1_Model.InitialData[i].ScaleFactorValue1:F7}");
 
                             if (prov1_WindowService.Token.IsCancellationRequested) return;

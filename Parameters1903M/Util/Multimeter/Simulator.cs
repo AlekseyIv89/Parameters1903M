@@ -33,6 +33,11 @@ namespace Parameters1903M.Util.Multimeter
             }
         }
 
+        public void ResetAverageTime()
+        {
+            averagingTimeMillis = 0.0;
+        }
+
         public CommunicationInterface Connect(string address)
         {
             return CommunicationInterface.Emulator;

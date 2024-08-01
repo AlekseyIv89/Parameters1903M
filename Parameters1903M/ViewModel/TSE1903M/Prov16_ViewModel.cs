@@ -97,7 +97,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov16_WindowService.Multimeter.Measure(true).Result;
-                            Prov16_Model.InitialData[i].UdyValue = Converter.ConvertVoltToMilliVolt(result.Result);
+                            Prov16_Model.InitialData[i].UdyValue = Converter.ConvertVoltToMilliVolt(result.Value);
 
                             if (prov16_WindowService.Token.IsCancellationRequested) return;
                         }

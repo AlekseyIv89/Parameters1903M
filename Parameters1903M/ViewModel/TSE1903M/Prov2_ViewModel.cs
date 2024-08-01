@@ -52,6 +52,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
         public Prov2_Model Prov2_Model { get; private set; }
         private Prov2_Window ProvWindow { get => prov2_WindowService.GetProvWindow(); }
 
+        private IMeasure Multimeter { get => prov2_WindowService.Multimeter; }
+
         public Prov2_ViewModel(Parameter parameter)
         {
             Parameter = parameter;
@@ -104,7 +106,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                    prov2_WindowService.Multimeter.SetAverageTimeMillis(2_500);
+                    Multimeter.SetAverageTimeMillis(2_500);
 
                     bool vistavkaFlag = true;
                     do
@@ -116,7 +118,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         {
                             while (flag)
                             {
-                                CurrMeasureText = $"{Converter.ConvertVoltToMilliVolt(prov2_WindowService.Multimeter.Measure().Result.Result):F2} мВ";
+                                CurrMeasureText = $"{Converter.ConvertVoltToMilliVolt(Multimeter.Measure().Result.Value):F2} мВ";
                             }
                         });
 
@@ -140,8 +142,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                         await Task.Run(() =>
                         {
-                            double missingValue = prov2_WindowService.Multimeter.Measure().Result.Result;
-                            missingValue = Converter.ConvertVoltToMilliVolt(prov2_WindowService.Multimeter.Measure().Result.Result);
+                            double missingValue = Multimeter.Measure().Result.Value;
+                            missingValue = Converter.ConvertVoltToMilliVolt(Multimeter.Measure().Result.Value);
                             
                             double checkCurrentMicroA = 10.0;
                             if (GlobalVars.IsDebugEnabled)
@@ -175,17 +177,17 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     TimerWindow timerWindow = new TimerWindow(timeSpan) { Owner = ProvWindow };
                     if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
 
-                    prov2_WindowService.Multimeter.SetAverageTimeMillis(4_000);
+                    Multimeter.SetAverageTimeMillis(4_000);
 
                     await Task.Run(() =>
                     {
                         // Первую точку пропускаем
-                        double missingValue = prov2_WindowService.Multimeter.Measure().Result.Result;
+                        double missingValue = Multimeter.Measure().Result.Value;
 
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = prov2_WindowService.Multimeter.Measure().Result;
-                            Prov2_Model.InitialData[i].Udy1Value = Converter.ConvertVoltToMilliVolt(result.Result);
+                            MeasureResult result = Multimeter.Measure().Result;
+                            Prov2_Model.InitialData[i].Udy1Value = Converter.ConvertVoltToMilliVolt(result.Value);
 
                             if (prov2_WindowService.Token.IsCancellationRequested) return;
                         }
@@ -204,12 +206,12 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     await Task.Run(() =>
                     {
                         // Первую точку пропускаем
-                        double missingValue = prov2_WindowService.Multimeter.Measure().Result.Result;
+                        double missingValue = Multimeter.Measure().Result.Value;
 
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = prov2_WindowService.Multimeter.Measure(true).Result;
-                            Prov2_Model.InitialData[i].Udy2Value = Converter.ConvertVoltToMilliVolt(result.Result);
+                            MeasureResult result = Multimeter.Measure(true).Result;
+                            Prov2_Model.InitialData[i].Udy2Value = Converter.ConvertVoltToMilliVolt(result.Value);
 
                             if (prov2_WindowService.Token.IsCancellationRequested) return;
                         }                        

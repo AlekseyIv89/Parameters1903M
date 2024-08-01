@@ -13,16 +13,21 @@ namespace Parameters1903M.Model.TSE1903M
         private readonly Parameter sensitivityAxisNonparallelism;
 
         // Масштабный коэффициент
-        private readonly Parameter scaleFactor;
+        private ScaleFactorCalculatedData scaleFactorCalculatedData;
 
         public List<SensitivityAxisNonparallelismInitialData> InitialData { get; set; }
-        public List<SensitivityAxisNonparallelismCalculatedData> CalculatedData { get; set; }
+        public SensitivityAxisNonparallelismCalculatedData CalculatedData { get; set; }
 
         public Prov10_Model(Parameter sensitivityAxisNonparallelism)
         {
             this.sensitivityAxisNonparallelism = sensitivityAxisNonparallelism;
-            scaleFactor = new MainWindowService().GetParameterByName("Масштабный коэффициент, Ig");
+            GetAngleSensorSlopeCalculatedData();
             ReadData();
+        }
+
+        private async void GetAngleSensorSlopeCalculatedData()
+        {
+            scaleFactorCalculatedData = await new Prov1_Model(new MainWindowService().GetParameterByName("Масштабный коэффициент, Ig")).GetScaleFactorCalculatedData();
         }
 
         public void ClearAllData()
@@ -32,32 +37,40 @@ namespace Parameters1903M.Model.TSE1903M
                 InitialData[i].Clear();
             }
 
-            CalculatedData[0].Clear();
+            CalculatedData.Clear();
         }
 
         public void CalculateData()
         {
             double iSum = 0.0;
-            for (int i = 1; i < InitialData.Count; i++)
+
+            if (!string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].I0ValueStr))
             {
-                iSum += InitialData[i].I0Value;
+                for (int i = 1; i < InitialData.Count; i++)
+                {
+                    iSum += InitialData[i].I0Value;
+                }
+
+                CalculatedData.I1Value = iSum / InitialData.Count - 1;
+                CalculatedData.Fi0Value = CalculatedData.I1Value / (5E-6 * (scaleFactorCalculatedData.IgValue * 1E3));
             }
 
-            CalculatedData[0].I1Value = iSum / 4;
-            CalculatedData[0].Fi0Value = CalculatedData[0].I1Value / (5E-6 * scaleFactor.Value);
-
-            iSum = 0.0;
-            for (int i = 1; i < InitialData.Count; i++)
+            if (!string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].I0ValueStr) 
+                && !string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].I180ValueStr))
             {
-                iSum += InitialData[i].I180Value;
-            }
+                iSum = 0.0;
+                for (int i = 1; i < InitialData.Count; i++)
+                {
+                    iSum += InitialData[i].I180Value;
+                }
 
-            CalculatedData[0].I2Value = iSum / 4;
-            CalculatedData[0].Fi180Value = CalculatedData[0].I2Value / (5E-6 * scaleFactor.Value);
+                CalculatedData.I2Value = iSum / InitialData.Count - 1;
+                CalculatedData.Fi180Value = CalculatedData.I2Value / (5E-6 * (scaleFactorCalculatedData.IgValue * 1E3));
 
-            sensitivityAxisNonparallelism.StrValue = $"{CalculatedData[0].Fi0Value};{CalculatedData[0].Fi180Value}";
+                sensitivityAxisNonparallelism.StrValue = $"{CalculatedData.Fi0Value:F0};{CalculatedData.Fi180Value:F0}";
 
-            WriteData();
+                WriteData();
+            }                
         }
 
         private async void ReadData()
@@ -71,10 +84,7 @@ namespace Parameters1903M.Model.TSE1903M
                 new SensitivityAxisNonparallelismInitialData()
             };
 
-            CalculatedData = new List<SensitivityAxisNonparallelismCalculatedData>
-            {
-                new SensitivityAxisNonparallelismCalculatedData()
-            };
+            CalculatedData = new SensitivityAxisNonparallelismCalculatedData();
 
             if (!string.IsNullOrWhiteSpace(sensitivityAxisNonparallelism.StrValue))
             {
@@ -84,7 +94,7 @@ namespace Parameters1903M.Model.TSE1903M
 
                 string[] fileData = data.Split('\n');
                 List<SensitivityAxisNonparallelismInitialData> listInitData = JsonConvert.DeserializeObject<List<SensitivityAxisNonparallelismInitialData>>(fileData[0]);
-                List<SensitivityAxisNonparallelismCalculatedData> listCalcData = JsonConvert.DeserializeObject<List<SensitivityAxisNonparallelismCalculatedData>>(fileData[1]);
+                SensitivityAxisNonparallelismCalculatedData listCalcData = JsonConvert.DeserializeObject<SensitivityAxisNonparallelismCalculatedData>(fileData[1]);
 
                 for (int i = 0; i < listInitData.Count; i++)
                 {
@@ -92,10 +102,10 @@ namespace Parameters1903M.Model.TSE1903M
                     InitialData[i].I180Value = listInitData[i].I180Value;
                 }
 
-                CalculatedData[0].I1Value = listCalcData[0].I1Value;
-                CalculatedData[0].I2Value = listCalcData[0].I2Value;
-                CalculatedData[0].Fi0Value = listCalcData[0].Fi0Value;
-                CalculatedData[0].Fi180Value = listCalcData[0].Fi180Value;
+                CalculatedData.I1Value = listCalcData.I1Value;
+                CalculatedData.I2Value = listCalcData.I2Value;
+                CalculatedData.Fi0Value = listCalcData.Fi0Value;
+                CalculatedData.Fi180Value = listCalcData.Fi180Value;
             }
         }
 

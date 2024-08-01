@@ -184,7 +184,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov15_WindowService.Multimeter.Measure(true).Result;
-                            Prov15_Model.InitialData[i].I0T1Value = Converter.ConvertVoltToMicroAmpere(result.Result);
+                            Prov15_Model.InitialData[i].I0T1Value = Converter.ConvertVoltToMicroAmpere(result.Value);
 
                             if (prov15_WindowService.Token.IsCancellationRequested) return;
                         }
@@ -212,7 +212,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov15_WindowService.Multimeter.Measure(true).Result;
-                            Prov15_Model.InitialData[i].I4T1Value = Converter.ConvertVoltToMicroAmpere(result.Result);
+                            Prov15_Model.InitialData[i].I4T1Value = Converter.ConvertVoltToMicroAmpere(result.Value);
 
                             if (prov15_WindowService.Token.IsCancellationRequested) return;
                         }
@@ -239,7 +239,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov15_WindowService.Multimeter.Measure(true).Result;
-                            Prov15_Model.InitialData[i].I4T2Value = Converter.ConvertVoltToMicroAmpere(result.Result);
+                            Prov15_Model.InitialData[i].I4T2Value = Converter.ConvertVoltToMicroAmpere(result.Value);
 
                             if (prov15_WindowService.Token.IsCancellationRequested) return;
                         }
@@ -267,7 +267,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         for (int i = 0; i < 5; i++)
                         {
                             MeasureResult result = prov15_WindowService.Multimeter.Measure(true).Result;
-                            Prov15_Model.InitialData[i].I0T2Value = Converter.ConvertVoltToMicroAmpere(result.Result);
+                            Prov15_Model.InitialData[i].I0T2Value = Converter.ConvertVoltToMicroAmpere(result.Value);
 
                             if (prov15_WindowService.Token.IsCancellationRequested) return;
                         }

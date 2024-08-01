@@ -100,10 +100,10 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                     await Task.Run(() =>
                     {
-                        double missingValue = prov5_WindowService.Multimeter.Measure().Result.Result;
+                        double missingValue = prov5_WindowService.Multimeter.Measure().Result.Value;
 
                         MeasureResult result = prov5_WindowService.Multimeter.Measure().Result;
-                        Prov5_Model.InitialData.Udy1Value = Converter.ConvertVoltToMilliVolt(result.Result);
+                        Prov5_Model.InitialData.Udy1Value = Converter.ConvertVoltToMilliVolt(result.Value);
 
                         if (prov5_WindowService.Token.IsCancellationRequested) return;
                     }, prov5_WindowService.Token);
@@ -124,10 +124,10 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                     await Task.Run(() =>
                     {
-                        double missingValue = prov5_WindowService.Multimeter.Measure().Result.Result;
+                        double missingValue = prov5_WindowService.Multimeter.Measure().Result.Value;
 
                         MeasureResult result = prov5_WindowService.Multimeter.Measure(true).Result;
-                        Prov5_Model.InitialData.Udy2Value = Converter.ConvertVoltToMilliVolt(result.Result);
+                        Prov5_Model.InitialData.Udy2Value = Converter.ConvertVoltToMilliVolt(result.Value);
 
                         if (prov5_WindowService.Token.IsCancellationRequested) return;
                     }, prov5_WindowService.Token);

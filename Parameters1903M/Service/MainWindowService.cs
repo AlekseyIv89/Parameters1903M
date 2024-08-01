@@ -128,7 +128,7 @@ namespace Parameters1903M.Service
                         }
                         else
                         {
-                            ShowMessageAboutMeasureNeeded(parameterToFind);
+                            ShowMessageAboutMeasureNeeded(parameterToFind);                          
                         }
                         break;
                     case "Неперпендикулярность ОЧ опорной плоскости":
