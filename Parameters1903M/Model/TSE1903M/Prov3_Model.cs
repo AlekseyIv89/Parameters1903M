@@ -181,7 +181,7 @@ namespace Parameters1903M.Model.TSE1903M
 
     internal class AngleSensorZeroDriftCalculatedData : BaseModel, IProvData
     {
-        private readonly int digits = 1;
+        private readonly int digits = 2;
 
         private double deltaUdyValue;
         private string deltaUdyValueStr;

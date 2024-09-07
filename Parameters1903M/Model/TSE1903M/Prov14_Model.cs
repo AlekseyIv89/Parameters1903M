@@ -32,13 +32,19 @@ namespace Parameters1903M.Model.TSE1903M
 
         public void CalculateData()
         {
-            CalculatedData.Ioc1Value = Ios1(InitialData);
-            CalculatedData.Ioc2Value = Ios2(InitialData);
-            CalculatedData.Ig90Value = Ig(CalculatedData);
+            if (!string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].ScaleFactorPendulumDownValue1Str))
+            {
+                CalculatedData.Ioc1Value = Ios1(InitialData);
+            }
+            if (!string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].ScaleFactorPendulumDownValue2Str))
+            {
+                CalculatedData.Ioc2Value = Ios2(InitialData);
+                CalculatedData.Ig90Value = Ig(CalculatedData);
 
-            scaleFactorPendulumDown.Value = CalculatedData.Ig90Value;
+                scaleFactorPendulumDown.Value = CalculatedData.Ig90Value;
 
-            WriteData();
+                WriteData();
+            }
         }
 
         private double Ios1(List<ScaleFactorPendulumDownInitialData> initialData)

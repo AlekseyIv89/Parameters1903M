@@ -48,7 +48,7 @@
                       Model="{Binding ChartModel}"/>
 
         <TextBlock Grid.Column="1"
-                   Text="Sср [мВ/...′]"
+                   Text="δΨ [...″]"
                    FontSize="16"
                    Margin="0,10,5,10"/>
         <TextBox Grid.Column="2"

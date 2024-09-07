@@ -51,7 +51,7 @@ namespace Parameters1903M.Model.TSE1903M
                 InitialData.IMinValue = tempData.Min();
 
                 CalculatedData.DeltaIstValue = Math.Abs(InitialData.IMaxValue - InitialData.IMinValue) / 
-                    (5E-6 * scaleFactorCalculatedData.IgValue);
+                    (5E-6 * scaleFactorCalculatedData.IgValue * 1E3);
             }
         }
 
@@ -179,7 +179,7 @@ namespace Parameters1903M.Model.TSE1903M
 
     internal class StabilityOfPositionOSCalculatedData : BaseModel, IProvData
     {
-        private readonly int digits = 3;
+        private readonly int digits = 1;
 
         private double deltaIstValue;
         private string deltaIstValueStr;

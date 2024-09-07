@@ -100,7 +100,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 try
                 {
                     message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение " +
-                        "и подключите изделие к стойке в режиме измерения ТОС, замкните ОС." + Environment.NewLine;
+                        "и подключите изделие к стойке в режиме измерения ТОС, замкните ОС.";
                     MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
                         , MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
@@ -189,6 +189,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         }
                     }, prov1_WindowService.Token);
                     if (prov1_WindowService.Token.IsCancellationRequested) throw new ProvCancelledByUserException(Parameter);
+
+                    Prov1_Model.CalculateData();
 
                     message = "С помощью оптического квадранта наклонить плоскость поверочной плиты относительно исходного положения на угол 4° с погрешностью ±10″ в сторону противоположную выходной колодки";
                     mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel

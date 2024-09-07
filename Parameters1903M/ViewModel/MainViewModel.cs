@@ -108,7 +108,7 @@ namespace Parameters1903M.ViewModel
                 new Parameter() { Num = "10", Name = "Непараллельность ОЧ базовой плоскости", Unit = "...″", Digits = 0 },
                 new Parameter() { Num = "16", Name = "Неперпендикулярность ОЧ опорной плоскости", Unit = "...″", Digits = 0 },
                 new Parameter() { Num = "15", Name = "Температурный коэффициент, Kt", Unit = "%/°С", Digits = 0 },
-                new Parameter() { Num = "14", Name = "МК в положении маятником вниз", Unit = "мА/g", Digits = 0 },
+                new Parameter() { Num = "14", Name = "МК в положении маятником вниз", Unit = "мА/g", Digits = 1 },
                 new Parameter() { Num = "13", Name = "Время установления выходной информации, ВУВИ", Unit = "сек.", Digits = 0 },
                 new Parameter() { Num = "17", Name = "Ток отрыва ПС от упора", Unit = "мА", Digits = 0 },
                 new Parameter() { Num = "18", Name = "Время схода ПС с упора", Unit = "сек.", Digits = 0 }

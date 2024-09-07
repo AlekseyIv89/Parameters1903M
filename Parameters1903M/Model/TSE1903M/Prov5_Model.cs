@@ -144,7 +144,7 @@ namespace Parameters1903M.Model.TSE1903M
 
     internal class MechanicalStopAngleCalculatedData : BaseModel, IProvData
     {
-        private readonly int digits = 0;
+        private readonly int digits = 1;
 
         private double plusAlphaValue;
         private string plusAlphaValueStr;

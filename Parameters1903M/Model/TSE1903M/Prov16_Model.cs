@@ -13,16 +13,21 @@ namespace Parameters1903M.Model.TSE1903M
         private readonly Parameter sensitivityAxisNonperpendicularity;
 
         // Крутизна характеристики ДУ
-        private readonly Parameter angleSensorSlope;
+        private AngleSensorSlopeCalculatedData angleSensorSlopeCalculatedData;
 
         public List<SensitivityAxisNonperpendicularityInitialData> InitialData { get; set; }
-        public List<SensitivityAxisNonperpendicularityCalculatedData> CalculatedData { get; set; }
+        public SensitivityAxisNonperpendicularityCalculatedData CalculatedData { get; set; }
 
         public Prov16_Model(Parameter sensitivityAxisNonperpendicularity)
         {
             this.sensitivityAxisNonperpendicularity = sensitivityAxisNonperpendicularity;
-            angleSensorSlope = new MainWindowService().GetParameterByName("Крутизна характеристики ДУ, Sду");
+            GetAngleSensorSlopeCalculatedData();
             ReadData();
+        }
+
+        private async void GetAngleSensorSlopeCalculatedData()
+        {
+            angleSensorSlopeCalculatedData = await new Prov2_Model(new MainWindowService().GetParameterByName("Крутизна характеристики ДУ, Sду")).GetAngleSensorSlopeCalculatedData();
         }
 
         public void ClearAllData()
@@ -32,21 +37,21 @@ namespace Parameters1903M.Model.TSE1903M
                 InitialData[i].Clear();
             }
 
-            CalculatedData[0].Clear();
+            CalculatedData.Clear();
         }
 
         public void CalculateData()
         {
             double uSum = 0.0;
-            for (int i = 1; i < InitialData.Count; i++)
+            for (int i = 0; i < InitialData.Count; i++)
             {
                 uSum += InitialData[i].UdyValue;
             }
 
-            CalculatedData[0].UdyAverageValue = uSum / 4;
-            CalculatedData[0].DeltaMValue = CalculatedData[0].UdyAverageValue * 60 / angleSensorSlope.Value;
+            CalculatedData.UdyAverageValue = uSum / InitialData.Count;
+            CalculatedData.DeltaMValue = CalculatedData.UdyAverageValue/ angleSensorSlopeCalculatedData.SduValue;
 
-            sensitivityAxisNonperpendicularity.Value = CalculatedData[0].DeltaMValue;
+            sensitivityAxisNonperpendicularity.Value = CalculatedData.DeltaMValue;
 
             WriteData();
         }
@@ -62,10 +67,7 @@ namespace Parameters1903M.Model.TSE1903M
                 new SensitivityAxisNonperpendicularityInitialData()
             };
 
-            CalculatedData = new List<SensitivityAxisNonperpendicularityCalculatedData>
-            {
-                new SensitivityAxisNonperpendicularityCalculatedData()
-            };
+            CalculatedData = new SensitivityAxisNonperpendicularityCalculatedData();
 
             if (!string.IsNullOrWhiteSpace(sensitivityAxisNonperpendicularity.StrValue))
             {
@@ -75,15 +77,15 @@ namespace Parameters1903M.Model.TSE1903M
 
                 string[] fileData = data.Split('\n');
                 List<SensitivityAxisNonperpendicularityInitialData> listInitData = JsonConvert.DeserializeObject<List<SensitivityAxisNonperpendicularityInitialData>>(fileData[0]);
-                List<SensitivityAxisNonperpendicularityCalculatedData> listCalcData = JsonConvert.DeserializeObject<List<SensitivityAxisNonperpendicularityCalculatedData>>(fileData[1]);
+                SensitivityAxisNonperpendicularityCalculatedData listCalcData = JsonConvert.DeserializeObject<SensitivityAxisNonperpendicularityCalculatedData>(fileData[1]);
 
                 for (int i = 0; i < listInitData.Count; i++)
                 {
                     InitialData[i].UdyValue = listInitData[i].UdyValue;
                 }
 
-                CalculatedData[0].UdyAverageValue = listCalcData[0].UdyAverageValue;
-                CalculatedData[0].DeltaMValue = listCalcData[0].DeltaMValue;
+                CalculatedData.UdyAverageValue = listCalcData.UdyAverageValue;
+                CalculatedData.DeltaMValue = listCalcData.DeltaMValue;
             }
         }
 
@@ -96,7 +98,7 @@ namespace Parameters1903M.Model.TSE1903M
 
     internal class SensitivityAxisNonperpendicularityInitialData : BaseModel, IProvData
     {
-        private readonly int digits = 1;
+        private readonly int digits = 2;
 
         private double udyValue;
         private string udyValueStr;

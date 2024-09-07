@@ -14,6 +14,7 @@ using System.Windows.Input;
 
 namespace Parameters1903M.ViewModel.TSE1903M
 {
+    // Проверка непараллельности ОЧ базовой плоскости (φ 0,  φ180 )
     internal class Prov10_ViewModel: BaseViewModel
     {
         public string Title => Parameter.Name;
@@ -99,7 +100,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = Multimeter.Measure(true).Result;
+                            MeasureResult result = Multimeter.Measure().Result;
                             Prov10_Model.InitialData[i].I0Value = Converter.ConvertVoltToMicroAmpere(result.Value);
 
                             if (prov10_WindowService.Token.IsCancellationRequested) return;

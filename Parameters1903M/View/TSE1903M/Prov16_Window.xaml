@@ -56,43 +56,37 @@
             </ListView.View>
         </ListView>
 
-        <ListView Grid.Row="2"
-                  Margin="10,0,0,10"
-                  Foreground="Black"
-                  ItemsSource="{Binding Prov16_Model.CalculatedData}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Uср, мВ"
-                                    Width="130">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding UdyAverageValueStr, Mode=OneWay}"
-                                           TextAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <StackPanel Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Margin="10,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock Text="U'вых [мВ]"
+                       Margin="21,10,5,10"/>
+            <TextBox Text="{Binding Prov16_Model.CalculatedData.UdyAverageValueStr, Mode=OneWay}"
+                     Width="100"
+                     Height="26"
+                     VerticalAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     IsReadOnly="True"/>
+        </StackPanel>
 
-        <ListView Grid.Row="3"
-                  Margin="10,0,0,10"
-                  Foreground="Black"
-                  ItemsSource="{Binding Prov16_Model.CalculatedData}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Δm, ″"
-                                    Width="130">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding DeltaMValueStr, Mode=OneWay}"
-                                           TextAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <StackPanel Grid.Row="3"
+                    Grid.ColumnSpan="2"
+                    Margin="10,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <TextBlock Text="Δm [...″]"
+                       Margin="38,10,5,10"/>
+            <TextBox Text="{Binding Prov16_Model.CalculatedData.DeltaMValueStr, Mode=OneWay}"
+                     Width="100"
+                     Height="26"
+                     VerticalAlignment="Center"
+                     HorizontalContentAlignment="Center"
+                     VerticalContentAlignment="Center"
+                     IsReadOnly="True"/>
+        </StackPanel>
 
         <Button Content="{Binding ButtonContent}" 
                 Grid.Column="1"

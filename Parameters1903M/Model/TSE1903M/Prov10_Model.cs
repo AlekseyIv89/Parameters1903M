@@ -46,12 +46,12 @@ namespace Parameters1903M.Model.TSE1903M
 
             if (!string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].I0ValueStr))
             {
-                for (int i = 1; i < InitialData.Count; i++)
+                for (int i = 0; i < InitialData.Count; i++)
                 {
                     iSum += InitialData[i].I0Value;
                 }
 
-                CalculatedData.I1Value = iSum / InitialData.Count - 1;
+                CalculatedData.I1Value = iSum / InitialData.Count;
                 CalculatedData.Fi0Value = CalculatedData.I1Value / (5E-6 * (scaleFactorCalculatedData.IgValue * 1E3));
             }
 
@@ -59,12 +59,12 @@ namespace Parameters1903M.Model.TSE1903M
                 && !string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].I180ValueStr))
             {
                 iSum = 0.0;
-                for (int i = 1; i < InitialData.Count; i++)
+                for (int i = 0; i < InitialData.Count; i++)
                 {
                     iSum += InitialData[i].I180Value;
                 }
 
-                CalculatedData.I2Value = iSum / InitialData.Count - 1;
+                CalculatedData.I2Value = iSum / InitialData.Count;
                 CalculatedData.Fi180Value = CalculatedData.I2Value / (5E-6 * (scaleFactorCalculatedData.IgValue * 1E3));
 
                 sensitivityAxisNonparallelism.StrValue = $"{CalculatedData.Fi0Value:F0};{CalculatedData.Fi180Value:F0}";

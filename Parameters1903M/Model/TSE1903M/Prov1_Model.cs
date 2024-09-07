@@ -38,18 +38,25 @@ namespace Parameters1903M.Model.TSE1903M
 
         public void CalculateData()
         {
-            CalculatedData.Ioc1Value = Ios1(InitialData);
-            CalculatedData.Ioc2Value = Ios2(InitialData);
-            CalculatedData.IgValue = Ig(CalculatedData);
+            if (!string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].ScaleFactorValue1Str))
+            {
+                CalculatedData.Ioc1Value = Ios1(InitialData);
+            }
 
-            scaleFactor.Value = CalculatedData.IgValue;
+            if (!string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].ScaleFactorValue2Str))
+            {
+                CalculatedData.Ioc2Value = Ios2(InitialData);
+                CalculatedData.IgValue = Ig(CalculatedData);
 
-            log.Debug("Полученные в результате расчета данные:");
-            log.Debug($"    I1 [мА] = {CalculatedData.Ioc1Value}");
-            log.Debug($"    I2 [мА] = {CalculatedData.Ioc2Value}");
-            log.Debug($"    Ig [мА] = {CalculatedData.IgValue}");
+                scaleFactor.Value = CalculatedData.IgValue;
 
-            WriteData();
+                log.Debug("Полученные в результате расчета данные:");
+                log.Debug($"    I1 [мА] = {CalculatedData.Ioc1Value}");
+                log.Debug($"    I2 [мА] = {CalculatedData.Ioc2Value}");
+                log.Debug($"    Ig [мА] = {CalculatedData.IgValue}");
+
+                WriteData();
+            }
         }
 
         private double Ios1(List<ScaleFactorInitialData> initialData)

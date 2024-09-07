@@ -14,6 +14,7 @@ using System.Windows.Input;
 
 namespace Parameters1903M.ViewModel.TSE1903M
 {
+    // Проверка неперпендикулярности ОЧ опорной плоскости (∆m).
     internal class Prov16_ViewModel : BaseViewModel
     {
         public string Title => Parameter.Name;
@@ -29,6 +30,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
         public Prov16_Model Prov16_Model { get; private set; }
         private Prov16_Window ProvWindow { get => prov16_WindowService.GetProvWindow(); }
+
+        private IMeasure Multimeter { get => prov16_WindowService.Multimeter; }
 
         public Prov16_ViewModel(Parameter parameter)
         {
@@ -47,10 +50,12 @@ namespace Parameters1903M.ViewModel.TSE1903M
         {
             if (ButtonContent.Equals(BUTTON_START))
             {
+                string message;
+                string label = Parameter.Name.Split(',')[0];
+
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {
-                    string message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
-                    string label = Parameter.Name.Split(',')[0];
+                    message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
 
                     MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (mbr == MessageBoxResult.Yes)
@@ -67,24 +72,21 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 //---------------------------- Начало измерения ----------------------------
                 try
                 {
-                    string message = "Установить призму на выставленную в горизонт поверочную плиту в исходное положение.";
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    message = "Соедините  перемычками клемму «Hi» мультиметра c клеммой «ДУ» блока ВУ-23 и клемму «Lo» мультиметра с клеммой «Экран», " +
+                        "предварительно отключив мультиметр от штатных клемм измерительной стойки.";
+                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                    message = "Повернуть изделие с призмой вокруг ОЧ на 90° в сторону маятника.";
-                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение и " +
+                        "подключите изделие к стойке в режиме измерения выходного напряжения UДУ и его переменной составляющей.";
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                    message = "Соединить перемычками вход вольтметра к клеммам ДУ и ЭКРАН, предварительно отключив его от клемм ±U."
-                        + Environment.NewLine;
-                    message += "С помощью переключателя ВХОД-ЭКВ и тумблера IОС-РАЗР.ОС разорвать ОС.";
-                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    message = "Поверните призму с изделием на угол 90° в сторону маятника вокруг оси чувствительности.";
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                    TimeSpan timeBetweenMeasurements = new TimeSpan(0, 10, 0);
+                    TimeSpan timeBetweenMeasurements = new TimeSpan(0, 0, 10);
                     if (GlobalVars.IsDebugEnabled)
                     {
                         timeBetweenMeasurements = new TimeSpan(0, 0, 2);
@@ -92,11 +94,22 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     TimerWindow timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
                     if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
 
+                    int averageTimeInMillis = 4_000;
+                    if (GlobalVars.IsDebugEnabled)
+                    {
+                        averageTimeInMillis = 2_000;
+                    }
+
+                    Multimeter.ResetAverageTime();
+                    Multimeter.SetAverageTimeMillis(averageTimeInMillis);
+
                     await Task.Run(() =>
                     {
+                        double missingValue = Multimeter.Measure().Result.Value;
+
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = prov16_WindowService.Multimeter.Measure(true).Result;
+                            MeasureResult result = Multimeter.Measure().Result;
                             Prov16_Model.InitialData[i].UdyValue = Converter.ConvertVoltToMilliVolt(result.Value);
 
                             if (prov16_WindowService.Token.IsCancellationRequested) return;
@@ -108,7 +121,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 }
                 catch (ProvCancelledByUserException e)
                 {
-                    string message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
+                    message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
                     MessageBox.Show(ProvWindow, message, e.Parameter.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 //---------------------------- Конец измерения -----------------------------

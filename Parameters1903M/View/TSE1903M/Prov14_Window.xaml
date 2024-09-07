@@ -32,6 +32,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -70,7 +71,7 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
             <TextBlock 
-                   Text="I&#x2081; [мА]"
+                   Text="I'&#x2081; [мА]"
                    FontSize="16"
                    Margin="0,10,5,10"/>
             <TextBox 
@@ -89,7 +90,7 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
             <TextBlock 
-                   Text="I&#x2082; [мА]"
+                   Text="I'&#x2082; [мА]"
                    FontSize="16"
                    Margin="0,10,5,10"/>
             <TextBox 
@@ -107,7 +108,7 @@
         <StackPanel Grid.Row="4"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
-            <TextBlock Text="Ig90 [мА]"
+            <TextBlock Text="Ig&#x2089;&#x2080; [мА]"
                        FontSize="16"
                        Margin="0,10,5,10"/>
             <TextBox Text="{Binding Prov14_Model.CalculatedData.Ig90ValueStr, Mode=OneWay}"
@@ -120,6 +121,15 @@
                      FontWeight="Bold"
                      IsReadOnly="True"/>
         </StackPanel>
+
+        <TextBlock Grid.Row="5"
+                   Grid.ColumnSpan="2"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Margin="10"
+                   Visibility="{Binding CurrMeasureVisibility}"
+                   Text="{Binding CurrMeasureText}"
+                   HorizontalAlignment="Center"/>
 
         <Button Content="{Binding ButtonContent}" 
                 Grid.Column="1"
