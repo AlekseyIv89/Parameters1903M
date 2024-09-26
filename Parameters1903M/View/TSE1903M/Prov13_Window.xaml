@@ -46,7 +46,7 @@
                                     Width="145">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Postion0ValueStr, Mode=OneWay}"
+                                <TextBlock Text="{Binding Position0ValueStr, Mode=OneWay}"
                                            TextAlignment="Center"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -55,7 +55,7 @@
                                     Width="145">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Postion180ValueStr, Mode=OneWay}"
+                                <TextBlock Text="{Binding Position180ValueStr, Mode=OneWay}"
                                            TextAlignment="Center"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -72,7 +72,7 @@
                    FontSize="16"
                    Margin="0,10,5,10"/>
             <TextBox 
-                 Text="{Binding Prov13_Model.CalculatedData.MaxPostionValueStr, Mode=OneWay}"
+                 Text="{Binding Prov13_Model.CalculatedData.MaxPositionValueStr, Mode=OneWay}"
                  Width="100"
                  Height="26"
                  VerticalAlignment="Center"

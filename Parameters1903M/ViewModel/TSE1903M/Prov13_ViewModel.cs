@@ -106,7 +106,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                         message = "Введите измеренное значение времени";
                         new InputDialogWindowService().OpenDialog(Parameter, label, message);
-                        Prov13_Model.InitialData[i * 2].Postion0Value = GlobalVars.InputDialogValue;
+                        Prov13_Model.InitialData[i * 2].Position0Value = GlobalVars.InputDialogValue;
 
                         message = "Поверните призму с изделием на 90° в сторону, противоположную выходной колодке.";
                         mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
@@ -130,7 +130,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                         message = "Введите измеренное значение времени";
                         new InputDialogWindowService().OpenDialog(Parameter, label, message);
-                        Prov13_Model.InitialData[i * 2 + 1].Postion0Value = GlobalVars.InputDialogValue;
+                        Prov13_Model.InitialData[i * 2 + 1].Position0Value = GlobalVars.InputDialogValue;
                     }
 
                     message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в положение, " +
@@ -163,7 +163,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                         message = "Введите измеренное значение времени";
                         new InputDialogWindowService().OpenDialog(Parameter, label, message);
-                        Prov13_Model.InitialData[i * 2].Postion180Value = GlobalVars.InputDialogValue;
+                        Prov13_Model.InitialData[i * 2].Position180Value = GlobalVars.InputDialogValue;
 
                         message = "Поверните призму с изделием на 90° в сторону, противоположную выходной колодке.";
                         mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
@@ -187,7 +187,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                         message = "Введите измеренное значение времени";
                         new InputDialogWindowService().OpenDialog(Parameter, label, message);
-                        Prov13_Model.InitialData[i * 2 + 1].Postion180Value = GlobalVars.InputDialogValue;
+                        Prov13_Model.InitialData[i * 2 + 1].Position180Value = GlobalVars.InputDialogValue;
                     }
 
                     Prov13_Model.CalculateData();

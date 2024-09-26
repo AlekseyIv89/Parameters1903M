@@ -33,21 +33,21 @@ namespace Parameters1903M.Model.TSE1903M
 
         public void CalculateData()
         {
-            double maxValue = InitialData[0].Postion0Value >= InitialData[0].Postion180Value
-                ? InitialData[0].Postion0Value
-                : InitialData[0].Postion180Value;
+            double maxValue = InitialData[0].Position0Value >= InitialData[0].Position180Value
+                ? InitialData[0].Position0Value
+                : InitialData[0].Position180Value;
 
             for (int i = 1; i < InitialData.Count; i++)
             {
-                if (InitialData[i].Postion0Value > maxValue)
-                    maxValue = InitialData[i].Postion0Value;
+                if (InitialData[i].Position0Value > maxValue)
+                    maxValue = InitialData[i].Position0Value;
 
-                if (InitialData[i].Postion180Value > maxValue)
-                    maxValue = InitialData[i].Postion180Value;
+                if (InitialData[i].Position180Value > maxValue)
+                    maxValue = InitialData[i].Position180Value;
             }
 
-            CalculatedData.MaxPostionValue = maxValue;
-            outputInformationEstablishmentTime.Value = CalculatedData.MaxPostionValue;
+            CalculatedData.MaxPositionValue = maxValue;
+            outputInformationEstablishmentTime.Value = CalculatedData.MaxPositionValue;
 
             WriteData();
         }
@@ -82,11 +82,11 @@ namespace Parameters1903M.Model.TSE1903M
 
                 for (int i = 0; i < listInitData.Count; i++)
                 {
-                    InitialData[i].Postion0Value = listInitData[i].Postion0Value;
-                    InitialData[i].Postion180Value = listInitData[i].Postion180Value;
+                    InitialData[i].Position0Value = listInitData[i].Position0Value;
+                    InitialData[i].Position180Value = listInitData[i].Position180Value;
                 }
 
-                CalculatedData.MaxPostionValue = calcData.MaxPostionValue;
+                CalculatedData.MaxPositionValue = calcData.MaxPositionValue;
             }
         }
 
@@ -101,55 +101,58 @@ namespace Parameters1903M.Model.TSE1903M
     {
         private readonly int digits = 0;
 
-        private double postion0Value;
-        private string postion0ValueStr;
+        private double position0Value;
+        private string position0ValueStr;
 
-        private double postion180Value;
-        private string postion180ValueStr;
+        private double position180Value;
+        private string position180ValueStr;
 
-        public double Postion0Value
+        public double Position0Value
         {
-            get => postion0Value;
+            get => position0Value;
             set
             {
-                postion0Value = value;
-                Postion0ValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+                position0Value = value;
+                Position0ValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
             }
         }
 
-        public string Postion0ValueStr
+        public string Position0ValueStr
         {
-            get => postion0ValueStr;
+            get => position0ValueStr;
             set
             {
-                postion0ValueStr = value;
+                position0ValueStr = value;
                 OnPropertyChanged();
             }
         }
 
-        public double Postion180Value
+        public double Position180Value
         {
-            get => postion180Value;
+            get => position180Value;
             set
             {
-                postion180Value = value;
-                Postion180ValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+                position180Value = value;
+                Position180ValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
             }
         }
 
-        public string Postion180ValueStr
+        public string Position180ValueStr
         {
-            get => postion180ValueStr;
+            get => position180ValueStr;
             set
             {
-                postion180ValueStr = value;
+                position180ValueStr = value;
                 OnPropertyChanged();
             }
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            Position0Value = default;
+            Position0ValueStr = default;
+            Position180Value = default;
+            Position180ValueStr = default;
         }
     }
 
@@ -157,33 +160,33 @@ namespace Parameters1903M.Model.TSE1903M
     {
         private readonly int digits = 0;
 
-        private double maxPostionValue;
-        private string maxPostionValueStr;
+        private double maxPositionValue;
+        private string maxPositionValueStr;
 
-        public double MaxPostionValue
+        public double MaxPositionValue
         {
-            get => maxPostionValue;
+            get => maxPositionValue;
             set
             {
-                maxPostionValue = value;
-                MaxPostionValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+                maxPositionValue = value;
+                MaxPositionValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
             }
         }
 
-        public string MaxPostionValueStr
+        public string MaxPositionValueStr
         {
-            get => maxPostionValueStr;
+            get => maxPositionValueStr;
             set
             {
-                maxPostionValueStr = value;
+                maxPositionValueStr = value;
                 OnPropertyChanged();
             }
         }
 
         public void Clear()
         {
-            MaxPostionValue = default;
-            MaxPostionValueStr = default;
+            MaxPositionValue = default;
+            MaxPositionValueStr = default;
         }
     }
 }
