@@ -49,8 +49,9 @@ namespace Parameters1903M.Model.TSE1903M
             {
                 InitialData.IMaxValue = tempData.Max();
                 InitialData.IMinValue = tempData.Min();
+                InitialData.DeltaIMaxValue = InitialData.IMaxValue - InitialData.IMinValue;
 
-                CalculatedData.DeltaIstValue = Math.Abs(InitialData.IMaxValue - InitialData.IMinValue) / 
+                CalculatedData.DeltaIstValue = Math.Abs(InitialData.DeltaIMaxValue) / 
                     (5E-6 * scaleFactorCalculatedData.IgValue * 1E3);
             }
         }
@@ -81,6 +82,7 @@ namespace Parameters1903M.Model.TSE1903M
                 InitialData.IValue = initData.IValue;
                 InitialData.IMinValue = initData.IMinValue;
                 InitialData.IMaxValue = initData.IMaxValue;
+                InitialData.DeltaIMaxValue = initData.DeltaIMaxValue;
 
                 CalculatedData.DeltaIstValue = calcData.DeltaIstValue;
             }
@@ -105,6 +107,9 @@ namespace Parameters1903M.Model.TSE1903M
 
         private double iMaxValue;
         private string iMaxValueStr;
+
+        private double deltaIMaxValue;
+        private string deltaIMaxValueStr;
 
         public double IValue
         {
@@ -166,6 +171,26 @@ namespace Parameters1903M.Model.TSE1903M
             }
         }
 
+        public double DeltaIMaxValue
+        {
+            get => deltaIMaxValue;
+            set
+            {
+                deltaIMaxValue = value;
+                DeltaIMaxValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+            }
+        }
+
+        public string DeltaIMaxValueStr
+        {
+            get => deltaIMaxValueStr;
+            private set
+            {
+                deltaIMaxValueStr = value;
+                OnPropertyChanged();
+            }
+        }
+
         public void Clear()
         {
             IValue = default;
@@ -174,6 +199,8 @@ namespace Parameters1903M.Model.TSE1903M
             IMinValueStr = default;
             IMaxValue = default;
             IMaxValueStr = default;
+            DeltaIMaxValue = default;
+            DeltaIMaxValueStr = default;
         }
     }
 

@@ -32,11 +32,9 @@ namespace Parameters1903M.Model.TSE1903M
 
         public void CalculateData()
         {
-            double maxReleaseTimeValue = InitialData[0].InclinePlusValue;
-            if (InitialData[0].InclineMinusValue > maxReleaseTimeValue)
-                maxReleaseTimeValue = InitialData[0].InclineMinusValue;
+            double maxReleaseTimeValue = 0.0;
 
-            for (int i = 1; i < InitialData.Count; i++)
+            for (int i = 0; i < InitialData.Count; i++)
             {
                 if (InitialData[i].InclinePlusValue > maxReleaseTimeValue)
                     maxReleaseTimeValue = InitialData[i].InclinePlusValue;

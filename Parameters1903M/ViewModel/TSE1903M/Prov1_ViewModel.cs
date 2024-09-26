@@ -78,13 +78,14 @@ namespace Parameters1903M.ViewModel.TSE1903M
             {
                 string message;
                 string label = Parameter.Name.Split(',')[0];
+                MessageBoxResult mbr;
 
                 log.Debug($"   ========== Начало проверки '{label}' ==========   ");
 
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {
                     message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (mbr == MessageBoxResult.Yes)
                     {
                         Prov1_Model.ClearAllData();
@@ -101,8 +102,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 {
                     message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение " +
                         "и подключите изделие к стойке в режиме измерения ТОС, замкните ОС.";
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
-                        , MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
                     Multimeter.SetAverageTimeMillis(2_500);
@@ -122,8 +122,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                         });
 
                         message = "Установите изделие поворотом плиты в исходное положение, при котором ТОС находится в пределах ±10 мкА.";
-                        mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
-                            , MessageBoxImage.Information);
+                        mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
                         flag = false;
@@ -148,8 +147,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                             if (Math.Abs(missingValue) > checkCurrentMicroA)
                             {
                                 message = "ТОС не соответствует допуску ±10 мкА. Повторите выставку изделия.";
-                                mbr = MessageBox.Show(message, label, MessageBoxButton.OKCancel
-                                    , MessageBoxImage.Warning);
+                                mbr = MessageBox.Show(message, label, MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                                 if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
                             }
                             else vistavkaFlag = false;
@@ -158,8 +156,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     while (vistavkaFlag);                    
 
                     message = "С помощью оптического квадранта наклонить плоскость поверочной плиты на угол 4° с погрешностью ±10″ в сторону выходной колодки относительно исходного положения.";
-                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
-                        , MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
                     TimeSpan timeSpan = new TimeSpan(0, 0, 10);
@@ -193,8 +190,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     Prov1_Model.CalculateData();
 
                     message = "С помощью оптического квадранта наклонить плоскость поверочной плиты относительно исходного положения на угол 4° с погрешностью ±10″ в сторону противоположную выходной колодки";
-                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel
-                        , MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
                     timerWindow = new TimerWindow(timeSpan) { Owner = ProvWindow };

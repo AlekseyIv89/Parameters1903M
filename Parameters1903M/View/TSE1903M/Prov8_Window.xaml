@@ -29,6 +29,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -41,7 +42,7 @@
         </Grid.ColumnDefinitions>
 
         <oxy:PlotView Grid.Row="1"
-                      Grid.RowSpan="3"
+                      Grid.RowSpan="4"
                       Grid.ColumnSpan="4"
                       Model="{Binding ChartModel}"/>
 
@@ -92,6 +93,22 @@
                  Grid.Column="5"
                  Margin="0,0,10,0"
                  Text="{Binding Prov8_Model.InitialData.IMinValueStr, Mode=OneWay}"
+                 Width="100"
+                 Height="26"
+                 VerticalAlignment="Center"
+                 HorizontalContentAlignment="Center"
+                 VerticalContentAlignment="Center"
+                 IsReadOnly="True"/>
+
+
+        <TextBlock Grid.Row="3"
+                   Grid.Column="4"
+                   Text="ΔImax [мкА]"
+                   Margin="10,10,5,10"/>
+        <TextBox Grid.Row="3"
+                 Grid.Column="5"
+                 Margin="0,0,10,0"
+                 Text="{Binding Prov8_Model.InitialData.DeltaIMaxValueStr, Mode=OneWay}"
                  Width="100"
                  Height="26"
                  VerticalAlignment="Center"

@@ -91,6 +91,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
         public Prov15_Model Prov15_Model { get; private set; }
         private Prov15_Window ProvWindow { get => prov15_WindowService.GetProvWindow(); }
 
+        private IMeasure Multimeter { get => prov15_WindowService.Multimeter; }
+
         public Prov15_ViewModel(Parameter parameter)
         {
             Parameter = parameter;
@@ -108,12 +110,14 @@ namespace Parameters1903M.ViewModel.TSE1903M
         {
             if (ButtonContent.Equals(BUTTON_START))
             {
+                string message;
+                string label = Parameter.Name.Split(',')[0];
+                MessageBoxResult mbr;
+
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {
-                    string message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
-                    string label = Parameter.Name.Split(',')[0];
-
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
+                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (mbr == MessageBoxResult.Yes)
                     {
                         Prov15_Model.ClearAllData();
@@ -128,7 +132,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 //---------------------------- Начало измерения ----------------------------
                 try
                 {
-                    string message = "Установить изделие в ";
+                    message = "Установить изделие в ";
                     if (true)
                     {
                         message += "приспособление ИА-ПО-ЦЕ1903";
@@ -137,34 +141,29 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     {
                         message += "обогревную призму ИА-ПО ЦЕ1906";
                     }
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
                     message = "Установить обогревную призму с изделием на поверочную плиту в исходное положение.";
-                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
                     message = "Установить на поверочную призму два уровня: основной и дополнительный." + Environment.NewLine;
                     message += "Дополнительный уровень установить на технологическую подставку, обеспечивающую наклон уровня на (4,0±0,5)°." + Environment.NewLine;
                     message += "Установочные плоскости уровней должны быть перпендикулярны грани поверочной плиты, вдоль которой расположены два регулировочных винта (домкраты)";
-                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
                     TextMessage1 = "Положение уровней на поверочной плите за все время определения \nтемпературного коэффициента должно быть неизменным";
 
                     message = "Выставить поверочную плиту в горизонт с погрешностью 1″." + Environment.NewLine;
                     message += "Контроль горизонтальности производить по основному уровню";
-                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
                     message = "Включить УРТ на 30˚С." + Environment.NewLine;
                     message += "Выдержать изделие в обогревной призме 2 часа";
-                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
                     TextMessage2 = "Контролировать точность выставки поверочной плиты с погрешностью 1″";
@@ -183,7 +182,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = prov15_WindowService.Multimeter.Measure(true).Result;
+                            MeasureResult result = Multimeter.Measure(true).Result;
                             Prov15_Model.InitialData[i].I0T1Value = Converter.ConvertVoltToMicroAmpere(result.Value);
 
                             if (prov15_WindowService.Token.IsCancellationRequested) return;
@@ -211,7 +210,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = prov15_WindowService.Multimeter.Measure(true).Result;
+                            MeasureResult result = Multimeter.Measure(true).Result;
                             Prov15_Model.InitialData[i].I4T1Value = Converter.ConvertVoltToMicroAmpere(result.Value);
 
                             if (prov15_WindowService.Token.IsCancellationRequested) return;
@@ -222,8 +221,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     Prov15_Model.CalculateData();
 
                     message = "Переключить УРТ на 50 °С и выдержать изделие 2 часа.";
-                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
                     timeBetweenMeasurements = new TimeSpan(2, 0, 0);
@@ -238,7 +236,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = prov15_WindowService.Multimeter.Measure(true).Result;
+                            MeasureResult result = Multimeter.Measure(true).Result;
                             Prov15_Model.InitialData[i].I4T2Value = Converter.ConvertVoltToMicroAmpere(result.Value);
 
                             if (prov15_WindowService.Token.IsCancellationRequested) return;
@@ -250,8 +248,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
 
                     message = "Наклонить изделие поворотом поверочной плиты исходное положение." + Environment.NewLine;
                     message += "Контроль выставки горизонтальности плиты осуществлять по нулевому показанию основного уровня";
-                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
                     timeBetweenMeasurements = new TimeSpan(0, 15, 0);
@@ -266,7 +263,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            MeasureResult result = prov15_WindowService.Multimeter.Measure(true).Result;
+                            MeasureResult result = Multimeter.Measure(true).Result;
                             Prov15_Model.InitialData[i].I0T2Value = Converter.ConvertVoltToMicroAmpere(result.Value);
 
                             if (prov15_WindowService.Token.IsCancellationRequested) return;
@@ -278,7 +275,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 }
                 catch (ProvCancelledByUserException e)
                 {
-                    string message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
+                    message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
                     MessageBox.Show(ProvWindow, message, e.Parameter.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
 

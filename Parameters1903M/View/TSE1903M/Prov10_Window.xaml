@@ -45,7 +45,7 @@
                   ItemsSource="{Binding Prov10_Model.InitialData}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="I&#x2081;n, мА"
+                    <GridViewColumn Header="I&#x2081;n, мкА"
                                     Width="170">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -54,7 +54,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="I&#x2082;n, мА"
+                    <GridViewColumn Header="I&#x2082;n, мкА"
                                     Width="170">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -109,6 +109,7 @@
                      VerticalAlignment="Center"
                      HorizontalContentAlignment="Center"
                      VerticalContentAlignment="Center"
+                     FontWeight="Bold"
                      IsReadOnly="True"/>
         </StackPanel>
 
@@ -125,6 +126,7 @@
                      VerticalAlignment="Center"
                      HorizontalContentAlignment="Center"
                      VerticalContentAlignment="Center"
+                     FontWeight="Bold"
                      IsReadOnly="True"/>
         </StackPanel>
 

@@ -261,6 +261,7 @@ namespace Parameters1903M.Model.TSE1903M
     internal class TemperatureKoefficientCalculatedData : BaseModel, IProvData
     {
         private readonly int digits = 3;
+        private readonly int kt_digits = 4;
 
         private double i0T1AverageValue;
         private string i0T1AverageValueStr;
@@ -408,8 +409,9 @@ namespace Parameters1903M.Model.TSE1903M
             get => ktValue;
             set
             {
+                
                 ktValue = value;
-                KtValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+                KtValueStr = Math.Round(value, kt_digits, MidpointRounding.AwayFromZero).ToString($"F{kt_digits}");
             }
         }
 

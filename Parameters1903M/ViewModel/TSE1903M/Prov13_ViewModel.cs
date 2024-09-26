@@ -45,12 +45,14 @@ namespace Parameters1903M.ViewModel.TSE1903M
         {
             if (ButtonContent.Equals(BUTTON_START))
             {
+                string message;
+                string label = Parameter.Name.Split(',')[0];
+                MessageBoxResult mbr;
+
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {
-                    string message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
-                    string label = Parameter.Name.Split(',')[0];
-
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
+                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (mbr == MessageBoxResult.Yes)
                     {
                         Prov13_Model.ClearAllData();
@@ -65,79 +67,134 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 //---------------------------- Начало измерения ----------------------------
                 try
                 {
-                    for (int i = 0; i < 2; i++)
+                    message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение, " +
+                        "подключите изделие к стойке в режиме измерения ТОС, замкните ОС.";
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                    for (int i = 0; i < 5; i++)
                     {
-                        string message = "Установить призму с изделием на выставленную в горизонт поверочную плиту в исходное положение." + Environment.NewLine;
-                        message += "Замкнуть ОС";
-                        MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                        message = "Поверните призму с изделием на 90° в сторону выходной колодки.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
                             , MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                        for (int j = 0; j < 4; j++)
-                        {
-                            message = "Повернуть призму с изделием на угол 90° в сторону выходной колодке.";
-                            mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                                , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                            if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                            TimeSpan timeBetweenMeasurements = new TimeSpan(0, 0, 10);
-                            if (GlobalVars.IsDebugEnabled)
-                            {
-                                timeBetweenMeasurements = new TimeSpan(0, 0, 2);
-                            }
-                            TimerWindow timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
-                            if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
-
-                            message = "Вернуть изделие в исходное положение. Время поворота изделия 1-2 сек." + Environment.NewLine;
-                            message += "Определить время с момента поворота до установления величины по прибору Uду менее ±200 мВ";
-                            mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                                , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                            if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                            message = "Введите измеренное значение времени";
-                            string title = "Время установления выходной информации";
-                            new InputDialogWindowService().OpenDialog(Parameter, title, message);
-                            Prov13_Model.InitialData[(i * 4) + j].Postion0Value = GlobalVars.InputDialogValue;
-
-                            message = "Повернуть призму с изделием на угол 90° в сторону противоположной выходной колодки.";
-                            mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                                , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                            if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                            timeBetweenMeasurements = new TimeSpan(0, 0, 10);
-                            if (GlobalVars.IsDebugEnabled)
-                            {
-                                timeBetweenMeasurements = new TimeSpan(0, 0, 2);
-                            }
-                            timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
-                            if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
-
-                            message = "Вернуть изделие в исходное положение. Время поворота изделия 1-2 сек." + Environment.NewLine;
-                            message += "Определить время с момента поворота до установления величины по прибору Uду менее ±200 мВ";
-                            mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                                , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                            if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                            message = "Введите измеренное значение времени";
-                            title = "Время установления выходной информации";
-                            new InputDialogWindowService().OpenDialog(Parameter, title, message);
-                            Prov13_Model.InitialData[(i * 4) + j].Postion180Value = GlobalVars.InputDialogValue;
-                        }
-
                         if (i == 0)
                         {
-                            message = "Установить призму с изделием на выставленную в горизонт поверочную плиту в положение, повернутое на 180° относительно исходного.";
+                            message = "В цепь обратной связи последовательно включить магазин сопротивлений типа Р33 и " +
+                                "установить на магазине сопротивление, обеспечивающее максимальный ток в рамке Iосmax = 25 мА.";
                             mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
                                 , MessageBoxButton.OKCancel, MessageBoxImage.Information);
                             if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
                         }
+
+                        TimeSpan timeBetweenMeasurements = new TimeSpan(0, 0, 10);
+                        if (GlobalVars.IsDebugEnabled)
+                        {
+                            timeBetweenMeasurements = new TimeSpan(0, 0, 2);
+                        }
+                        TimerWindow timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
+                        if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Поверните  изделие за (1 – 2) с в исходное положение и " +
+                            "определите время от окончания поворота до момента, " +
+                            "когда величина выходного напряжения ДУ (Uду) будет находиться в пределах ±200 мВ";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Введите измеренное значение времени";
+                        new InputDialogWindowService().OpenDialog(Parameter, label, message);
+                        Prov13_Model.InitialData[i * 2].Postion0Value = GlobalVars.InputDialogValue;
+
+                        message = "Поверните призму с изделием на 90° в сторону, противоположную выходной колодке.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                        timeBetweenMeasurements = new TimeSpan(0, 0, 10);
+                        if (GlobalVars.IsDebugEnabled)
+                        {
+                            timeBetweenMeasurements = new TimeSpan(0, 0, 2);
+                        }
+                        timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
+                        if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Поверните  изделие за (1 – 2) с в исходное положение и " +
+                            "определите время от окончания поворота до момента, " +
+                            "когда величина выходного напряжения ДУ (Uду) будет находиться в пределах ±200 мВ.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Введите измеренное значение времени";
+                        new InputDialogWindowService().OpenDialog(Parameter, label, message);
+                        Prov13_Model.InitialData[i * 2 + 1].Postion0Value = GlobalVars.InputDialogValue;
+                    }
+
+                    message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в положение, " +
+                        "повернутое относительно исходного на 180º вокруг ОЧ (положение 180).";
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                    for (int i = 0; i < 5; i++)
+                    {
+                        message = "Поверните призму с изделием на 90° в сторону выходной колодки.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                        TimeSpan timeBetweenMeasurements = new TimeSpan(0, 0, 10);
+                        if (GlobalVars.IsDebugEnabled)
+                        {
+                            timeBetweenMeasurements = new TimeSpan(0, 0, 2);
+                        }
+                        TimerWindow timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
+                        if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Поверните  изделие за (1 – 2) с в положение 180 и " +
+                            "определите время от окончания поворота до момента, " +
+                            "когда величина выходного напряжения ДУ (Uду) будет находиться в пределах ±200 мВ";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Введите измеренное значение времени";
+                        new InputDialogWindowService().OpenDialog(Parameter, label, message);
+                        Prov13_Model.InitialData[i * 2].Postion180Value = GlobalVars.InputDialogValue;
+
+                        message = "Поверните призму с изделием на 90° в сторону, противоположную выходной колодке.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                        timeBetweenMeasurements = new TimeSpan(0, 0, 10);
+                        if (GlobalVars.IsDebugEnabled)
+                        {
+                            timeBetweenMeasurements = new TimeSpan(0, 0, 2);
+                        }
+                        timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
+                        if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Поверните  изделие за (1 – 2) с в исходное положение и " +
+                            "определите время от окончания поворота до момента, " +
+                            "когда величина выходного напряжения ДУ (Uду) будет находиться в пределах ±200 мВ.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Введите измеренное значение времени";
+                        new InputDialogWindowService().OpenDialog(Parameter, label, message);
+                        Prov13_Model.InitialData[i * 2 + 1].Postion180Value = GlobalVars.InputDialogValue;
                     }
 
                     Prov13_Model.CalculateData();
                 }
                 catch (ProvCancelledByUserException e)
                 {
-                    string message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
+                    message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
                     MessageBox.Show(ProvWindow, message, e.Parameter.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 //---------------------------- Конец измерения -----------------------------

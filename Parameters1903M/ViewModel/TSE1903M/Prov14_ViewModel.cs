@@ -74,11 +74,12 @@ namespace Parameters1903M.ViewModel.TSE1903M
             {
                 string message;
                 string label = Parameter.Name.Split(',')[0];
+                MessageBoxResult mbr;
 
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {
                     message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (mbr == MessageBoxResult.Yes)
                     {
                         Prov14_Model.ClearAllData();
@@ -95,7 +96,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 {
                     message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение " +
                         "и подключите изделие к стойке в режиме измерения ТОС, замкните ОС.";
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
                     message = "Поверните призму с изделием на угол 90° в сторону маятника вокруг оси чувствительности.";

@@ -44,10 +44,12 @@ namespace Parameters1903M.ViewModel.TSE1903M
         {
             if (ButtonContent.Equals(BUTTON_START))
             {
+                string message;
+                string label = Parameter.Name.Split(',')[0];
+
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {
-                    string message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
-                    string label = Parameter.Name.Split(',')[0];
+                    message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
 
                     MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (mbr == MessageBoxResult.Yes)
@@ -64,87 +66,63 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 //---------------------------- Начало измерения ----------------------------
                 try
                 {
-                    string message = "Установить призму с изделием на выставленную в горизонт поверочную плиту в исходное положение." + Environment.NewLine;
-                    message += "Замкнуть ОС";
+                    message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение, " +
+                        "подключите изделие к стойке в режиме измерения ТОС, замкните ОС.";
                     MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
                         , MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                    message = "Наклоном плиты выставить значение ТОС в пределах плюс (15,00 ± 0,01) мА.";
+                    message = "Наклоном плиты выставите значение ТОС в пределах (15 ± 0,01) мА.";
                     mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
                         , MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
                     for (int i = 0; i < 3; i++)
                     {
-                        message = "Повернуть призму с изделием на угол 90° в сторону выходной колодки.";
+                        message = "Поверните призму с изделием вокруг ОМ на 90º в сторону выходной колодки, " +
+                            "включите последовательно цепи обратной связи магазин сопротивления типа Р33 и " +
+                            "установите на магазине сопротивление обеспечивающее ТОС Iосmах в пределах (25 ± 0,05) мА, " +
+                            "разорвите ОС, " +
+                            "поверните призму с изделием обратно вокруг ОМ на 90º в сторону противоположную выходной колодке так, " +
+                            "чтобы ПС оставалась на положительном упоре.";
                         mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
                             , MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                        message = "В цепь обратной связи включить последовательно магазин сопротивления типа Р33, ";
-                        message += "установить на магазине сопротивление, обеспечивающее ТОС Jосmах в пределах плюс (25,00 ± 0,05) мА.";
+                        message = "Замкните ОС и замерьте в секундах время t1, " +
+                            "в течение которого с момента включения тумблера \"Iос\" по прибору Uду установится величина " +
+                            "в пределах ±200 мВ.";
                         mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
                             , MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                        message = "Разорвать ОС.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                        message = "Повернуть призму с изделием обратно на угол 90° так, чтобы ПС оставалось на положительном упоре.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                        message = "Замкнуть ОС (тумблер Iос) и записать в секундах время в графу «наклон в «+»», ";
-                        message += "в течение которого с момента включения тумблера \"Iос\" по прибору Uду установиться величина в пределах ±200 мВ.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                        message = "Введите измеренное время в секундах";
+                        message = "Введите измеренное время в секундах.";
                         string title = "Время схода ПС с упора (наклон в \"+\")";
                         new InputDialogWindowService().OpenDialog(Parameter, title, message);
                         Prov18_Model.InitialData[i].InclinePlusValue = GlobalVars.InputDialogValue;
                     }
 
-                    message = "Наклоном плиты выставить значение ТОС в пределах минус (15,00 ± 0,01) мА.";
-                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                        , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                    if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
                     for (int i = 0; i < 3; i++)
                     {
-                        message = "Повернуть призму с изделием на минус 90° выходной колодкой вверх.";
+                        message = "Поверните призму с изделием вокруг ОМ на 90º в сторону противоположную выходной колодке, " +
+                            "включите последовательно цепи обратной связи магазин сопротивления типа Р33 и " +
+                            "установите на магазине сопротивление обеспечивающее ТОС Iосmах в пределах минус (25 ± 0,05) мА, " +
+                            "разорвите ОС, " +
+                            "поверните призму с изделием обратно вокруг ОМ на 90º в сторону выходной колодки так, " +
+                            "чтобы ПС оставалась на отрицательном упоре.";
                         mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
                             , MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                        message = "Установить на магазине сопротивление, обеспечивающее ТОС Jосmах в пределах минус (25,00 ± 0,05) мА";
+                        message = "Замкните ОС и замерьте в секундах время t4, " +
+                            "в течение которого с момента включения тумблера \"Iос\" по прибору Uду установится величина " +
+                            "в пределах ±200 мВ.";
                         mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
                             , MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                        message = "Разорвать ОС.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                        message = "Повернуть призму с изделием обратно на угол 90° так, чтобы ПС оставалось на отрицательном упоре.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                        message = "Замкнуть ОС (тумблер Iос) и записать в секундах время в графу «наклон в «-»», ";
-                        message += "в течение которого с момента включения тумблера \"Iос\" по прибору Uду установиться величина в пределах ±200 мВ.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
-
-                        message = "Введите измеренное время в секундах";
-                        string title = "Время схода ПС с упора (наклон в \"+\")";
+                        message = "Введите измеренное время в секундах.";
+                        string title = "Время схода ПС с упора (наклон в \"-\")";
                         new InputDialogWindowService().OpenDialog(Parameter, title, message);
                         Prov18_Model.InitialData[i].InclineMinusValue = GlobalVars.InputDialogValue;
                     }
@@ -153,7 +131,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 }
                 catch (ProvCancelledByUserException e)
                 {
-                    string message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
+                    message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
                     MessageBox.Show(ProvWindow, message, e.Parameter.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 //---------------------------- Конец измерения -----------------------------

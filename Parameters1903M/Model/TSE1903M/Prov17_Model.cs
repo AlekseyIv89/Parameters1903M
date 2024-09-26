@@ -32,24 +32,35 @@ namespace Parameters1903M.Model.TSE1903M
 
         public void CalculateData()
         {
-            double minPlusValue = InitialData[0].InclinePlusValue;
-            double minMinusValue = InitialData[0].InclineMinusValue;
-
-            for (int i = 1; i < InitialData.Count; i++)
+            if (!string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].InclinePlusValueStr))
             {
-                if (InitialData[i].InclinePlusValue < minPlusValue)
-                    minPlusValue = InitialData[i].InclinePlusValue;
+                double minPlusValue = Math.Abs(InitialData[0].InclinePlusValue);
 
-                if (InitialData[i].InclineMinusValue < minMinusValue)
-                    minMinusValue = InitialData[i].InclineMinusValue;
+                for (int i = 1; i < InitialData.Count; i++)
+                {
+                    if (Math.Abs(InitialData[i].InclinePlusValue) < minPlusValue)
+                        minPlusValue = Math.Abs(InitialData[i].InclinePlusValue);
+                }
+
+                CalculatedData.MinInclinePlusValue = minPlusValue;
             }
 
-            CalculatedData.MinInclinePlusValue = minPlusValue;
-            CalculatedData.MinInclineMinusValue = minMinusValue;
+            if (!string.IsNullOrWhiteSpace(InitialData[InitialData.Count - 1].InclineMinusValueStr))
+            {
+                double minMinusValue = Math.Abs(InitialData[0].InclineMinusValue);
 
-            liftOffCurrent.StrValue = $"{CalculatedData.MinInclinePlusValueStr};{CalculatedData.MinInclineMinusValueStr}";
+                for (int i = 1; i < InitialData.Count; i++)
+                {
+                    if (Math.Abs(InitialData[i].InclineMinusValue) < minMinusValue)
+                        minMinusValue = Math.Abs(InitialData[i].InclineMinusValue);
+                }
 
-            WriteData();
+                CalculatedData.MinInclineMinusValue = minMinusValue;
+
+                liftOffCurrent.StrValue = $"{CalculatedData.MinInclinePlusValueStr};{CalculatedData.MinInclineMinusValueStr}";
+
+                WriteData();
+            }
         }
 
         private async void ReadData()

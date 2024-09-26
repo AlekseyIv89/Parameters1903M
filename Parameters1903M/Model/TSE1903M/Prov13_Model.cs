@@ -64,6 +64,8 @@ namespace Parameters1903M.Model.TSE1903M
                 new OutputInformationEstablishmentTimeInitialData(),
                 new OutputInformationEstablishmentTimeInitialData(),
                 new OutputInformationEstablishmentTimeInitialData(),
+                new OutputInformationEstablishmentTimeInitialData(),
+                new OutputInformationEstablishmentTimeInitialData()
             };
 
             CalculatedData = new OutputInformationEstablishmentTimeCalculatedData();

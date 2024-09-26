@@ -4,8 +4,10 @@ using Parameters1903M.Service.Command;
 using Parameters1903M.Service.TSE1903M;
 using Parameters1903M.Util;
 using Parameters1903M.Util.Exceptions;
+using Parameters1903M.Util.Multimeter;
 using Parameters1903M.View.TSE1903M;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -27,6 +29,8 @@ namespace Parameters1903M.ViewModel.TSE1903M
         public Prov17_Model Prov17_Model { get; private set; }
         private Prov17_Window ProvWindow { get => prov17_WindowService.GetProvWindow(); }
 
+        private IMeasure Multimeter { get => prov17_WindowService.Multimeter; }
+
         public Prov17_ViewModel(Parameter parameter)
         {
             Parameter = parameter;
@@ -40,16 +44,18 @@ namespace Parameters1903M.ViewModel.TSE1903M
             ButtonStartOrStopCommand = new RelayCommand(param => ParameterMeasure(), x => true);
         }
 
-        private void ParameterMeasure()
+        private async void ParameterMeasure()
         {
             if (ButtonContent.Equals(BUTTON_START))
             {
+                string message;
+                string label = Parameter.Name.Split(',')[0];
+                MessageBoxResult mbr;
+
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {
-                    string message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
-                    string label = Parameter.Name.Split(',')[0];
-
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    message = "Измерения уже проводились. Вы желаете стереть все данные по текущей проверке?";
+                    mbr = MessageBox.Show(ProvWindow, message, label, MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (mbr == MessageBoxResult.Yes)
                     {
                         Prov17_Model.ClearAllData();
@@ -64,77 +70,81 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 //---------------------------- Начало измерения ----------------------------
                 try
                 {
-                    string message = "Установить призму с изделием на выставленную в горизонт поверочную плиту в исходное положение." + Environment.NewLine;
-                    message += "Замкнуть ОС";
-                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
+                    message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение, " +
+                        "подключите изделие к стойке в режиме измерения ТОС, замкните ОС.";
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
                         , MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
+                    Multimeter.SetAverageTimeMillis(4_000);
+
                     for (int i = 0; i < 3; i++)
                     {
-                        message = "Наклоном плиты выставить значение ТОС Jосmах в пределах плюс (28,0 ± 0,5) мА.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        message = "Наклоном плиты выставите значение ТОС Jосmах в пределах (28±0,5) мА. " +
+                            "В цепь обратной связи включите последовательно магазин сопротивления типа Р33 и " +
+                            "установите на магазине сопротивление, обеспечивающее ТОС Iосmах в пределах (25 ± 0,05) мА.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                        message = "В цепь обратной связи включить последовательно магазин сопротивления типа Р33, ";
-                        message += "установить на магазине сопротивление, обеспечивающее ТОС Jосmах в пределах плюс (25,00 ± 0,05) мА.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        message = "Разомкните на 5 секунд и замкните ОС и плавно возвращайте плиту в исходное положение " +
+                            "до момента начала замыкания ОС (показания по прибору Uду начинают изменяться к нулю).";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                        message = "Разомкнуть на 5 секунд и замкнуть ОС.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+                        await Task.Run(() =>
+                        {
+                            // Первую точку пропускаем
+                            double missingValue = Multimeter.Measure().Result.Value;
 
-                        message = "Плавно вернуть плиту в исходное положение до момента начала замыкания ОС. ";
-                        message += "После замыкания ОС записать величину ТОС в графу «наклон в «+».";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+                            MeasureResult result = Multimeter.Measure().Result;
+                            Prov17_Model.InitialData[i].InclinePlusValue = Converter.ConvertVoltToMilliAmpere(result.Value);
 
-                        message = "Введите измеренное значение ТОС";
-                        string title = "Ток отрыва ПС от упора (наклон в \"+\")";
-                        new InputDialogWindowService().OpenDialog(Parameter, title, message);
-                        Prov17_Model.InitialData[i].InclinePlusValue = GlobalVars.InputDialogValue;
+                            if (prov17_WindowService.Token.IsCancellationRequested) return;
+                        }, prov17_WindowService.Token);
+                        if (prov17_WindowService.Token.IsCancellationRequested) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Установите на магазине Р33 сопротивление 0 Ом.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
                     }
 
+                    Prov17_Model.CalculateData();
+
                     for (int i = 0; i < 3; i++)
                     {
-                        message = "Наклоном плиты выставить значение ТОС Jосmах в пределах минус (28,0 ± 0,5) мА.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        message = "Наклоном плиты выставите значение ТОС Jосmах в пределах минус (28±0,5) мА. " +
+                            "В цепь обратной связи включите последовательно магазин сопротивления типа Р33 и " +
+                            "установите на магазине сопротивление, обеспечивающее ТОС Iосmах в пределах минус (25 ± 0,05) мА.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                        message = "В цепь обратной связи включить последовательно магазин сопротивления типа Р33, ";
-                        message += "установить на магазине сопротивление, обеспечивающее ТОС Jосmах в пределах минус (25,00 ± 0,05) мА.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        message = "Разомкните на 5 секунд и замкните ОС и плавно возвращайте плиту в исходное положение " +
+                            "до момента начала замыкания ОС (показания по прибору Uду начинают изменяться к нулю).";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                         if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
 
-                        message = "Разомкнуть на 5 секунд и замкнуть ОС.";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+                        await Task.Run(() =>
+                        {
+                            // Первую точку пропускаем
+                            double missingValue = Multimeter.Measure().Result.Value;
 
-                        message = "Плавно вернуть плиту в исходное положение до момента начала замыкания ОС. ";
-                        message += "После замыкания ОС записать величину ТОС в графу «наклон в «-».";
-                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name
-                            , MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
+                            MeasureResult result = Multimeter.Measure().Result;
+                            Prov17_Model.InitialData[i].InclineMinusValue = Converter.ConvertVoltToMilliAmpere(result.Value);
 
-                        message = "Введите измеренное значение ТОС";
-                        string title = "Ток отрыва ПС от упора (наклон в \"-\")";
-                        new InputDialogWindowService().OpenDialog(Parameter, title, message);
-                        Prov17_Model.InitialData[i].InclineMinusValue = GlobalVars.InputDialogValue;
+                            if (prov17_WindowService.Token.IsCancellationRequested) return;
+                        }, prov17_WindowService.Token);
+                        if (prov17_WindowService.Token.IsCancellationRequested) throw new ProvCancelledByUserException(Parameter);
+
+                        message = "Установите на магазине Р33 сопротивление 0 Ом.";
+                        mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                        if (mbr == MessageBoxResult.Cancel) throw new ProvCancelledByUserException(Parameter);
                     }
 
                     Prov17_Model.CalculateData();
                 }
                 catch (ProvCancelledByUserException e)
                 {
-                    string message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
+                    message = $"Проверка параметра \"{e.Parameter.Name}\" прервана пользователем";
                     MessageBox.Show(ProvWindow, message, e.Parameter.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 //---------------------------- Конец измерения -----------------------------
