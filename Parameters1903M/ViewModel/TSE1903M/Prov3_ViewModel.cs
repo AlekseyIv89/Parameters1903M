@@ -12,6 +12,7 @@ using Parameters1903M.View;
 using Parameters1903M.View.TSE1903M;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -79,7 +80,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
             if (ButtonContent.Equals(BUTTON_START))
             {
                 string message;
-                string label = Parameter.Name.Split(',')[0];
+                string label = Parameter.Name.Split(',').First();
 
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {

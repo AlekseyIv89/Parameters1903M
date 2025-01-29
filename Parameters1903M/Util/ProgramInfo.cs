@@ -74,7 +74,7 @@ namespace Parameters1903M.Util
             new VersionInfo()
             {
                 Version = $"v.{Assembly.GetEntryAssembly().GetName().Version.Major}.{Assembly.GetEntryAssembly().GetName().Version.Minor}",
-                CompiledDate = new DateTime(2024, 9, 26),
+                CompiledDate = new DateTime(2025, 1, 30),
                 Changes = "Начальная версия программы."
             }
         };

@@ -15,6 +15,7 @@ using Parameters1903M.View;
 using Parameters1903M.Util.Multimeter;
 using Parameters1903M.Util.Exceptions;
 using Parameters1903M.Util;
+using System.Linq;
 
 namespace Parameters1903M.ViewModel.TSE1903M
 {
@@ -81,7 +82,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
             if (ButtonContent.Equals(BUTTON_START))
             {
                 string message;
-                string label = Parameter.Name.Split(',')[0];
+                string label = Parameter.Name.Split(',').First();
 
                 if (!string.IsNullOrWhiteSpace(Parameter.StrValue))
                 {

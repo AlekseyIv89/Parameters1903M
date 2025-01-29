@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Input;
 using log4net;
 using Parameters1903M.View;
+using System.Linq;
 
 namespace Parameters1903M.ViewModel.TSE1903M
 {
@@ -77,7 +78,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
             if (ButtonContent.Equals(BUTTON_START))
             {
                 string message;
-                string label = Parameter.Name.Split(',')[0];
+                string label = Parameter.Name.Split(',').First();
                 MessageBoxResult mbr;
 
                 log.Debug($"   ========== Начало проверки '{label}' ==========   ");

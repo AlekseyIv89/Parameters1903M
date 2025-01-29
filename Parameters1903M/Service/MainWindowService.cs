@@ -85,9 +85,6 @@ namespace Parameters1903M.Service
                             ShowMessageAboutMeasureNeeded(parameterToFind);
                         }
                         break;
-                    case "Переменная составляющая вых. напряжения ДУ, U~":
-                        new InputDialogWindowService().OpenDialog(param);
-                        break;
                     case "Угол крепления механических упоров":
                         parameterToFind = Parameters.Find(prm => prm.Name.Equals("Крутизна характеристики ДУ, Sду"));
                         if (!string.IsNullOrEmpty(parameterToFind.StrValue))
@@ -101,8 +98,9 @@ namespace Parameters1903M.Service
                         break;
                     case "Флюктуация дрейфа ТОС":
                     case "Нестабильность дрейфа ТОС":
-                        MessageBox.Show($"Параметр {parameter.Name} в разработке");
+                        new Prov6_WindowService().OpenDialog(param);
                         break;
+                    case "Переменная составляющая вых. напряжения ДУ, U~":
                     case "Сопротивление обмотки ОС, Rос":
                         new InputDialogWindowService().OpenDialog(param);
                         break;

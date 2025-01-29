@@ -123,6 +123,7 @@
     <Compile Include="Model\TSE1903M\Prov2_Model.cs" />
     <Compile Include="Model\TSE1903M\Prov3_Model.cs" />
     <Compile Include="Model\TSE1903M\Prov5_Model.cs" />
+    <Compile Include="Model\TSE1903M\Prov6_Model.cs" />
     <Compile Include="Model\TSE1903M\Prov8_Model.cs" />
     <Compile Include="Model\TSE1903M\Prov9_Model.cs" />
     <Compile Include="Model\VersionInfo.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Service\TSE1903M\Prov2_WindowService.cs" />
     <Compile Include="Service\TSE1903M\Prov3_WindowService.cs" />
     <Compile Include="Service\TSE1903M\Prov5_WindowService.cs" />
+    <Compile Include="Service\TSE1903M\Prov6_WindowService.cs" />
     <Compile Include="Service\TSE1903M\Prov8_WindowService.cs" />
     <Compile Include="Service\TSE1903M\Prov9_WindowService.cs" />
     <Compile Include="Service\TSE1903M\ProvMeasureWindowService.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="ViewModel\TSE1903M\Prov2_ViewModel.cs" />
     <Compile Include="ViewModel\TSE1903M\Prov3_ViewModel.cs" />
     <Compile Include="ViewModel\TSE1903M\Prov5_ViewModel.cs" />
+    <Compile Include="ViewModel\TSE1903M\Prov6_ViewModel.cs" />
     <Compile Include="ViewModel\TSE1903M\Prov8_ViewModel.cs" />
     <Compile Include="ViewModel\TSE1903M\Prov9_ViewModel.cs" />
     <Compile Include="ViewModel\ValidationRules\DeviceNumValidationRule.cs" />
@@ -252,6 +255,9 @@
     </Compile>
     <Compile Include="View\TSE1903M\Prov5_Window.xaml.cs">
       <DependentUpon>Prov5_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TSE1903M\Prov6_Window.xaml.cs">
+      <DependentUpon>Prov6_Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TSE1903M\Prov8_Window.xaml.cs">
       <DependentUpon>Prov8_Window.xaml</DependentUpon>
@@ -359,6 +365,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\TSE1903M\Prov5_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TSE1903M\Prov6_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
