@@ -64,11 +64,110 @@ namespace Parameters1903M.Model.TSE1903M
 
     internal class OsDriftFluctuationInitialData : BaseModel, IProvData
     {
-        // TODO
+        private readonly int digits = 3;
+
+        private double iValue;
+        private string iValueStr;
+
+        private double iMinValue;
+        private string iMinValueStr;
+
+        private double iMaxValue;
+        private string iMaxValueStr;
+
+        private double deltaIMaxValue;
+        private string deltaIMaxValueStr;
+
+        public double IValue
+        {
+            get => iValue;
+            set
+            {
+                iValue = value;
+                IValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+            }
+        }
+
+        public string IValueStr
+        {
+            get => iValueStr;
+            private set
+            {
+                iValueStr = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double IMinValue
+        {
+            get => iMinValue;
+            set
+            {
+                iMinValue = value;
+                IMinValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+            }
+        }
+
+        public string IMinValueStr
+        {
+            get => iMinValueStr;
+            private set
+            {
+                iMinValueStr = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double IMaxValue
+        {
+            get => iMaxValue;
+            set
+            {
+                iMaxValue = value;
+                IMaxValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+            }
+        }
+
+        public string IMaxValueStr
+        {
+            get => iMaxValueStr;
+            private set
+            {
+                iMaxValueStr = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double DeltaIMaxValue
+        {
+            get => deltaIMaxValue;
+            set
+            {
+                deltaIMaxValue = value;
+                DeltaIMaxValueStr = Math.Round(value, digits, MidpointRounding.AwayFromZero).ToString($"F{digits}");
+            }
+        }
+
+        public string DeltaIMaxValueStr
+        {
+            get => deltaIMaxValueStr;
+            private set
+            {
+                deltaIMaxValueStr = value;
+                OnPropertyChanged();
+            }
+        }
 
         public void Clear()
         {
-            // TODO
+            IValue = default;
+            IValueStr = default;
+            IMinValue = default;
+            IMinValueStr = default;
+            IMaxValue = default;
+            IMaxValueStr = default;
+            DeltaIMaxValue = default;
+            DeltaIMaxValueStr = default;
         }
     }
 

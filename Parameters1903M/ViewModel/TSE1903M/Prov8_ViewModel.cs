@@ -60,7 +60,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
             ChartModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
-                Title = "I, мА",
+                Title = "I, мкА",
                 MajorGridlineStyle = LineStyle.Solid
             });
             ChartModel.Series.Add(LineSeries);
@@ -111,10 +111,10 @@ namespace Parameters1903M.ViewModel.TSE1903M
                     MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
                     if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
 
-                    TimeSpan timeBetweenMeasurements = new TimeSpan(1, 0, 0);
+                    TimeSpan timeBetweenMeasurements = TimeSpan.FromMinutes(60);
                     if (GlobalVars.IsDebugEnabled)
                     {
-                        timeBetweenMeasurements = new TimeSpan(0, 0, 2);
+                        timeBetweenMeasurements = TimeSpan.FromSeconds(2);
                     }
                     TimerWindow timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
                     if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);

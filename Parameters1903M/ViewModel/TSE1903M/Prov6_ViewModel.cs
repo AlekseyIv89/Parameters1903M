@@ -62,7 +62,7 @@ namespace Parameters1903M.ViewModel.TSE1903M
             ChartModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
-                Title = "I, мА",
+                Title = "I, мкА",
                 MajorGridlineStyle = LineStyle.Solid
             });
             ChartModel.Series.Add(LineSeries);
@@ -107,7 +107,100 @@ namespace Parameters1903M.ViewModel.TSE1903M
                 //---------------------------- Начало измерения ----------------------------
                 try
                 {
-                    
+                    message = "Установите призму с изделием на выставленную в горизонт поверочную плиту в исходное положение, " +
+                        "подключите изделие к стойке в режиме измерения ТОС, замкните ОС и накройте призму с изделием кожухом.";
+                    MessageBoxResult mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
+
+                    TimeSpan timeBetweenMeasurements = TimeSpan.FromMinutes(60);
+                    if (GlobalVars.IsDebugEnabled)
+                    {
+                        timeBetweenMeasurements = TimeSpan.FromSeconds(2);
+                    }
+                    TimerWindow timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
+                    if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
+
+                    message = "Нажмите \"ОК\" для начала приема информации.";
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
+
+                    DateTime dateTimeStart = DateTime.Now;
+                    int secondsMeasureContinuing = 900;
+                    if (GlobalVars.IsDebugEnabled)
+                    {
+                        secondsMeasureContinuing = 5;
+                    }
+
+                    // TODO
+                    await Task.Run(() =>
+                    {
+                        int averageTimeInMillis = 1_000;
+                        if (GlobalVars.IsDebugEnabled)
+                        {
+                            averageTimeInMillis = 1_000;
+                        }
+
+                        Multimeter.ResetAverageTime();
+                        Multimeter.SetAverageTimeMillis(averageTimeInMillis);
+
+                        double missingValue = Multimeter.Measure().Result.Value;
+
+                        while (!prov6_WindowService.Token.IsCancellationRequested && DateTime.Now.Subtract(dateTimeStart).TotalSeconds < secondsMeasureContinuing)
+                        {
+                            MeasureResult result = Multimeter.Measure().Result;
+                            double resultValueToMicroAmpere = Converter.ConvertVoltToMicroAmpere(result.Value);
+                            Prov6_Model.InitialData.IValue = resultValueToMicroAmpere;
+                            //Prov6_Model.CalculateDataWhileMeasureRunning(resultValueToMicroAmpere);
+
+                            // TODO
+
+                            Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), resultValueToMicroAmpere));
+                            ChartModel.InvalidatePlot(true);
+                        }
+                    }, prov6_WindowService.Token);
+                    if (prov6_WindowService.Token.IsCancellationRequested) throw new ProvCancelledByUserException(Parameter);
+
+                    message = "Нажать кнопку \"БАСН\" на блоке БОС и подтвердить выполнение.";
+                    mbr = MessageBox.Show(ProvWindow, message, Parameter.Name, MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                    if (mbr != MessageBoxResult.OK) throw new ProvCancelledByUserException(Parameter);
+
+                    timeBetweenMeasurements = TimeSpan.FromSeconds(100);
+                    if (GlobalVars.IsDebugEnabled)
+                    {
+                        timeBetweenMeasurements = TimeSpan.FromSeconds(2);
+                    }
+                    timerWindow = new TimerWindow(timeBetweenMeasurements) { Owner = ProvWindow };
+                    if (timerWindow.ShowDialog() != true) throw new ProvCancelledByUserException(Parameter);
+
+                    dateTimeStart = DateTime.Now;
+
+                    await Task.Run(() =>
+                    {
+                        int averageTimeInMillis = 1_000;
+                        if (GlobalVars.IsDebugEnabled)
+                        {
+                            averageTimeInMillis = 1_000;
+                        }
+
+                        Multimeter.ResetAverageTime();
+                        Multimeter.SetAverageTimeMillis(averageTimeInMillis);
+
+                        double missingValue = Multimeter.Measure().Result.Value;
+
+                        while (!prov6_WindowService.Token.IsCancellationRequested && DateTime.Now.Subtract(dateTimeStart).TotalSeconds < secondsMeasureContinuing)
+                        {
+                            MeasureResult result = Multimeter.Measure().Result;
+                            double resultValueToMicroAmpere = Converter.ConvertVoltToMicroAmpere(result.Value);
+                            Prov6_Model.InitialData.IValue = resultValueToMicroAmpere;
+                            //Prov6_Model.CalculateDataWhileMeasureRunning(resultValueToMicroAmpere);
+
+                            // TODO
+
+                            Points.Add(new DataPoint(DateTimeAxis.ToDouble(result.DateTime), resultValueToMicroAmpere));
+                            ChartModel.InvalidatePlot(true);
+                        }
+                    }, prov6_WindowService.Token);
+                    if (prov6_WindowService.Token.IsCancellationRequested) throw new ProvCancelledByUserException(Parameter);
 
                     Prov6_Model.CalculateData();
                 }

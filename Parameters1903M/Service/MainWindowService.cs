@@ -60,9 +60,6 @@ namespace Parameters1903M.Service
         {
             if (param is Parameter parameter)
             {
-                List<Parameter> Parameters = GetMainWindowViewModel().Parameters;
-                Parameter parameterToFind;
-
                 switch (parameter.Name)
                 {
                     case "Выход на режим":
@@ -75,25 +72,15 @@ namespace Parameters1903M.Service
                         new Prov2_WindowService().OpenDialog(param);
                         break;
                     case "Дрейф нуля ДУ":
-                        parameterToFind = Parameters.Find(prm => prm.Name.Equals("Крутизна характеристики ДУ, Sду"));
-                        if (!string.IsNullOrEmpty(parameterToFind.StrValue))
+                        if (!IsAdditionalParameterMeasureNeeded("Крутизна характеристики ДУ, Sду"))
                         {
                             new Prov3_WindowService().OpenDialog(param);
                         }
-                        else
-                        {
-                            ShowMessageAboutMeasureNeeded(parameterToFind);
-                        }
                         break;
                     case "Угол крепления механических упоров":
-                        parameterToFind = Parameters.Find(prm => prm.Name.Equals("Крутизна характеристики ДУ, Sду"));
-                        if (!string.IsNullOrEmpty(parameterToFind.StrValue))
+                        if (!IsAdditionalParameterMeasureNeeded("Крутизна характеристики ДУ, Sду"))
                         {
                             new Prov5_WindowService().OpenDialog(param);
-                        }
-                        else
-                        {
-                            ShowMessageAboutMeasureNeeded(parameterToFind);
                         }
                         break;
                     case "Флюктуация дрейфа ТОС":
@@ -105,39 +92,24 @@ namespace Parameters1903M.Service
                         new InputDialogWindowService().OpenDialog(param);
                         break;
                     case "Стабильность положения ОЧ":
-                        parameterToFind = Parameters.Find(prm => prm.Name.Equals("Масштабный коэффициент, Ig"));
-                        if (!string.IsNullOrEmpty(parameterToFind.StrValue))
+                        if (!IsAdditionalParameterMeasureNeeded("Масштабный коэффициент, Ig"))
                         {
                             new Prov8_WindowService().OpenDialog(param);
-                        }
-                        else
-                        {
-                            ShowMessageAboutMeasureNeeded(parameterToFind);
                         }
                         break;
                     case "Функц. способность термопредохр.":
                         new Prov9_WindowService().OpenDialog(param);
                         break;
                     case "Непараллельность ОЧ базовой плоскости":
-                        parameterToFind = Parameters.Find(prm => prm.Name.Equals("Масштабный коэффициент, Ig"));
-                        if (!string.IsNullOrEmpty(parameterToFind.StrValue))
+                        if (!IsAdditionalParameterMeasureNeeded("Масштабный коэффициент, Ig"))
                         {
                             new Prov10_WindowService().OpenDialog(param);
                         }
-                        else
-                        {
-                            ShowMessageAboutMeasureNeeded(parameterToFind);                          
-                        }
                         break;
                     case "Неперпендикулярность ОЧ опорной плоскости":
-                        parameterToFind = Parameters.Find(prm => prm.Name.Equals("Крутизна характеристики ДУ, Sду"));
-                        if (!string.IsNullOrEmpty(parameterToFind.StrValue))
+                        if (!IsAdditionalParameterMeasureNeeded("Крутизна характеристики ДУ, Sду"))
                         {
                             new Prov16_WindowService().OpenDialog(param);
-                        }
-                        else
-                        {
-                            ShowMessageAboutMeasureNeeded(parameterToFind);
                         }
                         break;
                     case "Температурный коэффициент, Kt":
@@ -166,11 +138,17 @@ namespace Parameters1903M.Service
             }
         }
 
-        private void ShowMessageAboutMeasureNeeded(Parameter parameter)
+        private bool IsAdditionalParameterMeasureNeeded(string parameterFullName)
         {
-            string message = "Перед проведением проверки сначала необходимо произвести проверку параметра ";
-            message += $"\"{parameter.Name}\"";
-            MessageBox.Show(Application.Current.MainWindow, message, ProgramInfo.SoftwareName, MessageBoxButton.OK, MessageBoxImage.Information);
+            Parameter parameterToFind = GetMainWindowViewModel().Parameters.Find(prm => prm.Name.Equals(parameterFullName));
+
+            if (string.IsNullOrEmpty(parameterToFind.StrValue))
+            {
+                string message = $"Перед проведением проверки сначала необходимо произвести проверку параметра \"{parameterToFind.Name}\"";
+                MessageBox.Show(Application.Current.MainWindow, message, ProgramInfo.SoftwareName, MessageBoxButton.OK, MessageBoxImage.Information);
+                return true;
+            }
+            return false;
         }
 
         public IMeasure GetMultimeter()
